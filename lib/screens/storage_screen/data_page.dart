@@ -1,8 +1,9 @@
+// ignore_for_file: library_private_types_in_public_api, unused_element, avoid_print, avoid_unnecessary_containers
+
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
 import 'package:storage/screens/pdf/availble_products.dart';
-import 'package:storage/screens/pdf/barcode.dart';
 import 'package:storage/screens/pdf/file_handle_api.dart';
 import 'package:storage/screens/storage_screen/test.dart';
 

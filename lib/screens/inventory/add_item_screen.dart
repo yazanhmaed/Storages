@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, must_be_immutable
+// ignore_for_file: prefer_const_constructors, must_be_immutable, avoid_print
 
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +11,22 @@ class AddProductScreen extends StatelessWidget {
   AddProductScreen({super.key});
   final TextEditingController itemId = TextEditingController();
   final TextEditingController itemName = TextEditingController();
-  final TextEditingController itemSale = TextEditingController();
-  final TextEditingController itemBuying = TextEditingController();
-  final TextEditingController itemNumber = TextEditingController();
+  final TextEditingController itemPrice = TextEditingController();
+  final TextEditingController itemCost = TextEditingController();
+  final TextEditingController itemCountr = TextEditingController();
+  final TextEditingController itemFill = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => MicroCubit(),
+      create: (BuildContext context) => MicroCubit()
+        ..createDatabase()
+        ..getDataFromDatabase,
       child: BlocConsumer<MicroCubit, MicroStates>(
-        listener: (BuildContext context, MicroStates state) {},
+        listener: (BuildContext context, MicroStates state) {
+          if (state is InsertDatabaseState) {}
+        },
         builder: (BuildContext context, MicroStates state) {
           var cubit = MicroCubit.get(context);
           return Scaffold(
@@ -106,15 +111,15 @@ class AddProductScreen extends StatelessWidget {
                                         CustomTextField(
                                           height: '',
                                           hintText: '0.0',
-                                          controller: itemSale,
+                                          controller: itemPrice,
                                           keyboardType: TextInputType.number,
-                                          validate: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Text is required';
-                                            }
-                                            return null;
-                                          },
+                                          // validate: (value) {
+                                          //   if (value == null ||
+                                          //       value.isEmpty) {
+                                          //     return 'النص مطلوب';
+                                          //   }
+                                          //   return null;
+                                          // },
                                         ),
                                       ],
                                     ),
@@ -128,15 +133,37 @@ class AddProductScreen extends StatelessWidget {
                                         ),
                                         CustomTextField(
                                           height: '',
-                                          controller: itemBuying,
+                                          controller: itemCost,
                                           keyboardType: TextInputType.number,
-                                          validate: (value) {
-                                            // يمكنك إضافة المزيد من التحقق هنا إذا لزم الأمر
-                                            if (value!.isEmpty) {
-                                              return 'Text is required';
-                                            }
-                                            return null;
-                                          },
+                                          // validate: (value) {
+                                          //   if (value!.isEmpty) {
+                                          //     return 'النص مطلوب';
+                                          //   }
+                                          //   return null;
+                                          // },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          ' التعبئه مع سعر البيع',
+                                          style: Styles.textStyle14,
+                                        ),
+                                        CustomTextField(
+                                          height: '',
+                                          hintText: '0.0',
+                                          controller: itemFill,
+                                          keyboardType: TextInputType.number,
+                                          // validate: (value) {
+                                          //   if (value == null ||
+                                          //       value.isEmpty) {
+                                          //     return 'النص مطلوب';
+                                          //   }
+                                          //   return null;
+                                          // },
                                         ),
                                       ],
                                     ),
@@ -150,7 +177,7 @@ class AddProductScreen extends StatelessWidget {
                             CustomTextField(
                               height: '',
                               hintText: '0',
-                              controller: itemNumber,
+                              controller: itemCountr,
                               keyboardType: TextInputType.number,
                               validate: (value) {
                                 if (value!.isEmpty) {
@@ -165,6 +192,13 @@ class AddProductScreen extends StatelessWidget {
                                   if (_formKey.currentState!.validate()) {
                                     // القيام بالإجراءات المطلوبة هنا
                                     print('11111111111111111111111');
+                                    cubit.insertToDatabase(
+                                      itemName: itemName.text,
+                                      itemPrice: itemPrice.text,
+                                      itemCost: itemCost.text,
+                                      itemCount: itemCountr.text,
+                                      itemFill: itemFill.text,
+                                    );
                                   }
                                 },
                                 child: Padding(

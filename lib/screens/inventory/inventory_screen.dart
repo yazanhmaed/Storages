@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:storage/resources/widgets/my_cared.dart';
 import 'package:storage/screens/inventory/add_item_screen.dart';
-import 'package:storage/screens/inventory/show_item.dart';
 import 'package:storage/screens/storage_screen/data_page.dart';
 
 class InventoryScreen extends StatelessWidget {

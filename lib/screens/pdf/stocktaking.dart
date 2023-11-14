@@ -1,4 +1,6 @@
 // stocktaking
+// ignore_for_file: unused_local_variable, deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart';

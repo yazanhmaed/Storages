@@ -1,7 +1,8 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
 
 import 'package:storage/resources/styles.dart';
-
 
 class MyCared extends StatelessWidget {
   const MyCared({
