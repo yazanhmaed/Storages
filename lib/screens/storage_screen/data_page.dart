@@ -1,17 +1,20 @@
 // ignore_for_file: library_private_types_in_public_api, unused_element, avoid_print, avoid_unnecessary_containers
 
 import 'dart:math';
+import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
+import 'package:storage/resources/widgets/bottom_sheet.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 import 'package:storage/screens/pdf/availble_products.dart';
 import 'package:storage/screens/pdf/file_handle_api.dart';
 
+// ignore: must_be_immutable
 class DataPage extends StatefulWidget {
-  const DataPage({Key? key, required this.currentPerPage}) : super(key: key);
-  final int currentPerPage;
+  DataPage({Key? key, required this.currentPerPage}) : super(key: key);
+  int currentPerPage;
   @override
   _DataPageState createState() => _DataPageState();
 }
@@ -37,10 +40,9 @@ class _DataPageState extends State<DataPage> {
   var random = Random();
 
   List<Map<String, dynamic>> _generateData() {
-    List<Map<String, dynamic>> temps = [];
     print('le: ${MicroCubit.get(context).i.length}');
     for (var data in MicroCubit.get(context).i) {
-      temps.add({
+      MicroCubit.get(context).temps.add({
         'itemNumber': data.itemNumber,
         'itemName': data.itemName,
         'itemPrice': data.itemPrice,
@@ -50,7 +52,7 @@ class _DataPageState extends State<DataPage> {
       });
     }
 
-    return temps;
+    return MicroCubit.get(context).temps;
   }
 
   _initializeData() async {
@@ -58,7 +60,8 @@ class _DataPageState extends State<DataPage> {
   }
 
   _mockPullData() async {
-    _expanded = List.generate(widget.currentPerPage, (index) => false);
+    _expanded =
+        List.generate(MicroCubit.get(context).i.length, (index) => false);
 
     setState(() => _isLoading = true);
     Future.delayed(const Duration(seconds: 1)).then((value) {
@@ -66,7 +69,9 @@ class _DataPageState extends State<DataPage> {
       sourceOriginal.addAll(_generateData());
       _sourceFiltered = sourceOriginal;
       _total = _sourceFiltered.length;
-      _source = _sourceFiltered.getRange(0, widget.currentPerPage).toList();
+      _source = _sourceFiltered
+          .getRange(0, MicroCubit.get(context).i.length)
+          .toList();
       // _source = _sourceFiltered.getRange(0, MicroCubit.get(context).items.length).toList();
 
       setState(() => _isLoading = false);
@@ -102,8 +107,9 @@ class _DataPageState extends State<DataPage> {
       }
 
       _total = _sourceFiltered.length;
-      var rangeTop =
-          _total < widget.currentPerPage ? _total : widget.currentPerPage;
+      var rangeTop = _total < MicroCubit.get(context).i.length
+          ? _total
+          : MicroCubit.get(context).i.length;
       _expanded = List.generate(rangeTop, (index) => false);
       _source = _sourceFiltered.getRange(0, rangeTop).toList();
     } catch (e) {
@@ -160,7 +166,13 @@ class _DataPageState extends State<DataPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MicroCubit, MicroStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is GetDatabaseState) {
+          // print(MicroCubit.get(context).i.length);
+          // widget.currentPerPage = MicroCubit.get(context).i.length;
+          _initializeData();
+        }
+      },
       builder: (context, state) {
         var cubit = MicroCubit.get(context);
         print(cubit.items.length);
@@ -266,23 +278,38 @@ class _DataPageState extends State<DataPage> {
                       selecteds: _selecteds,
                       showSelect: _showSelect,
                       autoHeight: false,
-                      dropContainer: (data) {
-                        if (int.tryParse(data['itemNumber'].toString())!
-                            .isEven) {
-                          return const Text("is Even");
-                        }
-                        return _DropDownContainer(data: data);
-                      },
-                      onChangedRow: (value, header) {
-                        /// print(value);
-                        /// print(header);
-                      },
+                      // dropContainer: (data) {
+                      //   if (int.tryParse(data['itemNumber'].toString())!
+                      //       .isEven) {
+                      //     return const Text("is Even");
+                      //   }
+                      //   return _DropDownContainer(data: data);
+                      // },
+                      onChangedRow: (value, header) {},
                       onSubmittedRow: (value, header) {
                         /// print(value);
                         /// print(header);
                       },
                       onTabRow: (data) {
-                        print(data);
+                        showFlexibleBottomSheet(
+                          minHeight: 0,
+                          initHeight: 0.9,
+                          maxHeight: 0.9,
+                          context: context,
+                          builder:
+                              (context, scrollController, bottomSheetOffset) =>
+                                  InfoScreen(
+                            scrollController: scrollController,
+                            data: data,
+                            delete: () {
+                              cubit.delete(data['itemNumber']).then((value) {
+                                Navigator.of(context).pop();
+                                // navigateAndFinish(context, DataPage(currentPerPage: cubit.i.length));
+                              });
+                            },
+                          ),
+                          isExpand: false,
+                        );
                       },
                       onSort: (value) {
                         setState(() => _isLoading = true);

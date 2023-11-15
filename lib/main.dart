@@ -2,15 +2,17 @@ import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:storage/db/db_helper.dart';
 
 import 'package:storage/generated/l10n.dart';
+import 'package:storage/network/bloc.dart';
+import 'package:storage/network/local/cache_helper.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/layout_screen.dart';
 
-void main() async{
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // await DBHelper.initDb();
+  Bloc.observer = MyBlocObserver();
+  CacheHelper.init();
   runApp(const MyApp());
 }
 

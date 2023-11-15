@@ -35,27 +35,4 @@ double calculateOptimalTextSize(BoxConstraints constraints) {
   return optimalSize;
 }
 
-int currentIndex = 0;
 
-int? pageIndex = 0;
-double? latitude = 24.467200;
-double? longitude = 39.609792;
-int? fajr = 0;
-int? dhuhr = 0;
-int? asr = 0;
-int? maghrib = 0;
-int? isha = 0;
-String? country = 'SaudiArabia';
-String? city = 'Makkah';
-String? cityAr = 'مكة';
-String? day='';
-List<String> timeSalat = [];
-int? methodIndex = 4;
-bool? timeDialog = false;
-List settingTime = [
-  fajr,
-  dhuhr,
-  asr,
-  maghrib,
-  isha,
-];

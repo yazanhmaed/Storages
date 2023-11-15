@@ -25,6 +25,10 @@ class AddProductScreen extends StatelessWidget {
       },
       builder: (BuildContext context, MicroStates state) {
         var cubit = MicroCubit.get(context);
+
+        cubit.generateRandomNumber(12);
+        itemId.text = cubit.randomNumber;
+
         return Scaffold(
             appBar: AppBar(),
             body: Padding(
