@@ -3,6 +3,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:storage/model/item_model.dart';
 
 import 'package:storage/screens/home_screen/cubit/states.dart';
 
@@ -47,15 +48,15 @@ class MicroCubit extends Cubit<MicroStates> {
 
   void insertToDatabase({
     required String itemName,
-    String? itemPrice,
-    String? itemCost,
-    String? itemFill,
-    String? itemCount,
+    int? itemPrice,
+    int? itemCost,
+    int? itemFill,
+    int? itemCount,
   }) async {
-    itemPrice ??= "0";
-    itemCost ??= "0";
-    itemFill ??= "0";
-    itemCount ??= "1";
+    itemPrice ??= 0;
+    itemCost ??= 0;
+    itemFill ??= 0;
+    itemCount ??= 0;
 
     await dataBase.transaction((txn) => txn
             .rawInsert(
@@ -70,17 +71,21 @@ class MicroCubit extends Cubit<MicroStates> {
   }
 
   List<Map> items = [];
+  List<ItemModel> i = [];
   void getDataFromDatabase(dataBase) {
     items = [];
+    i = [];
     emit(GetDatabaseLodingState());
     dataBase.rawQuery('SELECT * FROM  items').then((value) {
       value.forEach((element) {
-        print('iiiiiiiiit');
-
         items.add(element);
+
+        i.add(ItemModel.fromJson(element));
+
+        // print('object: ${i.length}');
       });
-      print(items);
-      print(items.length);
+      // print(items);
+      // print(items.length);
       emit(GetDatabaseState());
     });
   }

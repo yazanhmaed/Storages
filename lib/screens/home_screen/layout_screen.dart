@@ -21,20 +21,18 @@ class LayoutScreen extends StatelessWidget {
               body: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
-                itemBuilder: (context, index) => Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InventoryScreen(),
-                          ));
-                    },
-                    child: Container(
-                      height: 200,
-                      color: Colors.amber,
-                      child: Text('المخزون'),
-                    ),
+                itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InventoryScreen(),
+                        ));
+                  },
+                  child: Container(
+                    height: 200,
+                    color: Colors.amber,
+                    child: Text('المخزون'),
                   ),
                 ),
                 itemCount: 1,
