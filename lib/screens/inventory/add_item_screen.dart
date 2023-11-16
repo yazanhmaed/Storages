@@ -6,6 +6,7 @@ import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
+import 'package:storage/screens/storage_screen/data_page.dart';
 
 class AddProductScreen extends StatelessWidget {
   AddProductScreen({super.key});
@@ -21,7 +22,7 @@ class AddProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<MicroCubit, MicroStates>(
       listener: (BuildContext context, MicroStates state) {
-        if (state is InsertDatabaseState) {}
+       
       },
       builder: (BuildContext context, MicroStates state) {
         var cubit = MicroCubit.get(context);
@@ -211,6 +212,11 @@ class AddProductScreen extends StatelessWidget {
                                     itemCount: int.tryParse(itemCountr.text),
                                     itemFill: int.tryParse(itemFill.text),
                                   );
+                                  itemCountr.clear();
+                                  itemName.clear();
+                                  itemPrice.clear();
+                                  itemCost.clear();
+                                  itemFill.clear();
                                 }
                               },
                               child: Padding(

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:responsive_table/responsive_table.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/bottom_sheet.dart';
@@ -173,15 +174,7 @@ class _DataPageState extends State<DataPage> {
           // widget.currentPerPage = MicroCubit.get(context).i.length;
           _initializeData();
         }
-        if (state is DeleteDatabaseState) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return DataPage(currentPerPage: widget.currentPerPage);
-              },
-            ),
-          );
-        }
+      
       },
       builder: (context, state) {
         var cubit = MicroCubit.get(context);
