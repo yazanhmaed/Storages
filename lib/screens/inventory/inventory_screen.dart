@@ -2,6 +2,7 @@
 
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
+import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/my_cared.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
@@ -17,9 +18,14 @@ class InventoryScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = MicroCubit.get(context);
-      
+
         return Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            title: Text(
+              'المخزون',
+              style: Styles.textStyle25,
+            ),
+          ),
           body: SafeArea(
             child: CustomScrollView(
               slivers: [
@@ -41,7 +47,8 @@ class InventoryScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DataPage(currentPerPage: cubit.i.length),
+                              builder: (context) =>
+                                  DataPage(currentPerPage: cubit.i.length),
                             ));
                       },
                       icon: Icons.search,

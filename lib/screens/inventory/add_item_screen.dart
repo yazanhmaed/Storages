@@ -21,9 +21,7 @@ class AddProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MicroCubit, MicroStates>(
-      listener: (BuildContext context, MicroStates state) {
-       
-      },
+      listener: (BuildContext context, MicroStates state) {},
       builder: (BuildContext context, MicroStates state) {
         var cubit = MicroCubit.get(context);
 
@@ -31,7 +29,12 @@ class AddProductScreen extends StatelessWidget {
         itemId.text = cubit.randomNumber;
 
         return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              title: Text(
+                'المخزون',
+                style: Styles.textStyle25,
+              ),
+            ),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: CustomScrollView(

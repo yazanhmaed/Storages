@@ -189,7 +189,7 @@ class _DataPageState extends State<DataPage> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              "المخزون",
+              "المنتجات المتوفره في المخزون",
               style: Styles.textStyle25.copyWith(color: Colors.white),
             ),
             actions: [
