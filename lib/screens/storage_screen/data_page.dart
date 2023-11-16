@@ -1,10 +1,11 @@
-// ignore_for_file: library_private_types_in_public_api, unused_element, avoid_print, avoid_unnecessary_containers
+// ignore_for_file: library_private_types_in_public_api, unused_element, avoid_print, avoid_unnecessary_containers, prefer_const_constructors
 
 import 'dart:math';
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
+import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/bottom_sheet.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
@@ -172,13 +173,25 @@ class _DataPageState extends State<DataPage> {
           // widget.currentPerPage = MicroCubit.get(context).i.length;
           _initializeData();
         }
+        if (state is DeleteDatabaseState) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return DataPage(currentPerPage: widget.currentPerPage);
+              },
+            ),
+          );
+        }
       },
       builder: (context, state) {
         var cubit = MicroCubit.get(context);
         print(cubit.items.length);
         return Scaffold(
           appBar: AppBar(
-            title: const Text("المخزون"),
+            title: Text(
+              "المخزون",
+              style: Styles.textStyle25.copyWith(color: Colors.white),
+            ),
             actions: [
               IconButton(
                 onPressed: _initializeData,
@@ -204,175 +217,191 @@ class _DataPageState extends State<DataPage> {
           // ),
 
           body: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                Container(
-                  constraints: const BoxConstraints(
-                    maxHeight: 700,
-                  ),
-                  child: Card(
-                    elevation: 1,
-                    shadowColor: Colors.black,
-                    clipBehavior: Clip.none,
-                    child: ResponsiveDatatable(
-                      title: TextButton.icon(
-                        onPressed: () async {
-                          // generate pdf file
-                          if (_selecteds.isEmpty) {
-                            final pdfFile = await PdfAvailableProducts.generate(
-                                sourceOriginal
-                                    .map((map) => map.values.toList())
-                                    .toList());
-                            FileHandleApi.openFile(pdfFile);
-                          } else {
-                            final pdfFile = await PdfAvailableProducts.generate(
-                                _selecteds
-                                    .map((map) => map.values.toList())
-                                    .toList());
-                            FileHandleApi.openFile(pdfFile);
-                          }
+              child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                    ),
+                    constraints: const BoxConstraints(
+                      maxHeight: 700,
+                    ),
+                    child: Card(
+                      elevation: 1,
+                      shadowColor: Colors.black,
+                      clipBehavior: Clip.none,
+                      child: ResponsiveDatatable(
+                        title: TextButton.icon(
+                          onPressed: () async {
+                            // generate pdf file
+                            if (_selecteds.isEmpty) {
+                              final pdfFile =
+                                  await PdfAvailableProducts.generate(
+                                      sourceOriginal
+                                          .map((map) => map.values.toList())
+                                          .toList());
+                              FileHandleApi.openFile(pdfFile);
+                            } else {
+                              final pdfFile =
+                                  await PdfAvailableProducts.generate(_selecteds
+                                      .map((map) => map.values.toList())
+                                      .toList());
+                              FileHandleApi.openFile(pdfFile);
+                            }
 
-                          // opening the pdf file
+                            // opening the pdf file
+                          },
+                          icon: const Icon(Icons.receipt_long_rounded),
+                          label: const Text("تقرير"),
+                        ),
+                        reponseScreenSizes: const [ScreenSize.sm],
+                        actions: [
+                          if (_isSearch)
+                            Expanded(
+                                child: TextField(
+                              decoration: InputDecoration(
+                                  hintText: 'ادخل اسم المنتج',
+                                  hintStyle: Styles.textStyle14,
+                                  prefixIcon: IconButton(
+                                      icon: const Icon(Icons.cancel),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isSearch = false;
+                                        });
+                                        _initializeData();
+                                      }),
+                                  suffixIcon: IconButton(
+                                      icon: const Icon(Icons.search),
+                                      onPressed: () {})),
+                              onChanged: (value) {
+                                _filterData(value);
+                              },
+                              onSubmitted: (value) {
+                                _filterData(value);
+                              },
+                            )),
+                          if (!_isSearch)
+                            IconButton(
+                                icon: const Icon(Icons.search),
+                                onPressed: () {
+                                  setState(() {
+                                    _isSearch = true;
+                                  });
+                                })
+                        ],
+                        headers: _headers,
+                        source: _source,
+                        selecteds: _selecteds,
+                        showSelect: _showSelect,
+                        autoHeight: false,
+                        // dropContainer: (data) {
+                        //   if (int.tryParse(data['itemNumber'].toString())!
+                        //       .isEven) {
+                        //     return const Text("is Even");
+                        //   }
+                        //   return _DropDownContainer(data: data);
+                        // },
+                        onChangedRow: (value, header) {},
+                        onSubmittedRow: (value, header) {
+                          /// print(value);
+                          /// print(header);
                         },
-                        icon: const Icon(Icons.receipt_long_rounded),
-                        label: const Text("تقرير"),
-                      ),
-                      reponseScreenSizes: const [ScreenSize.sm],
-                      actions: [
-                        if (_isSearch)
-                          Expanded(
-                              child: TextField(
-                            decoration: InputDecoration(
-                                hintText: 'ادخل اسم المنتج',
-                                prefixIcon: IconButton(
-                                    icon: const Icon(Icons.cancel),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isSearch = false;
-                                      });
-                                      _initializeData();
-                                    }),
-                                suffixIcon: IconButton(
-                                    icon: const Icon(Icons.search),
-                                    onPressed: () {})),
-                            onChanged: (value) {
-                              _filterData(value);
-                            },
-                            onSubmitted: (value) {
-                              _filterData(value);
-                            },
-                          )),
-                        if (!_isSearch)
-                          IconButton(
-                              icon: const Icon(Icons.search),
-                              onPressed: () {
-                                setState(() {
-                                  _isSearch = true;
+                        onTabRow: (data) {
+                          showFlexibleBottomSheet(
+                            minHeight: 0,
+                            initHeight: 0.9,
+                            maxHeight: 0.9,
+                            context: context,
+                            builder: (context, scrollController,
+                                    bottomSheetOffset) =>
+                                InfoScreen(
+                              scrollController: scrollController,
+                              data: data,
+                              delete: () {
+                                cubit.delete(data['itemNumber']).then((value) {
+                                  Navigator.of(context).pop();
+                                  // navigateAndFinish(context, DataPage(currentPerPage: cubit.i.length));
                                 });
-                              })
-                      ],
-                      headers: _headers,
-                      source: _source,
-                      selecteds: _selecteds,
-                      showSelect: _showSelect,
-                      autoHeight: false,
-                      // dropContainer: (data) {
-                      //   if (int.tryParse(data['itemNumber'].toString())!
-                      //       .isEven) {
-                      //     return const Text("is Even");
-                      //   }
-                      //   return _DropDownContainer(data: data);
-                      // },
-                      onChangedRow: (value, header) {},
-                      onSubmittedRow: (value, header) {
-                        /// print(value);
-                        /// print(header);
-                      },
-                      onTabRow: (data) {
-                        showFlexibleBottomSheet(
-                          minHeight: 0,
-                          initHeight: 0.9,
-                          maxHeight: 0.9,
-                          context: context,
-                          builder:
-                              (context, scrollController, bottomSheetOffset) =>
-                                  InfoScreen(
-                            scrollController: scrollController,
-                            data: data,
-                            delete: () {
-                              cubit.delete(data['itemNumber']).then((value) {
-                                Navigator.of(context).pop();
-                                // navigateAndFinish(context, DataPage(currentPerPage: cubit.i.length));
-                              });
-                            },
-                          ),
-                          isExpand: false,
-                        );
-                      },
-                      onSort: (value) {
-                        setState(() => _isLoading = true);
+                              },
+                            ),
+                            isExpand: false,
+                          );
+                        },
+                        onSort: (value) {
+                          setState(() => _isLoading = true);
 
-                        setState(() {
-                          _sortColumn = value;
-                          _sortAscending = !_sortAscending;
-                          if (_sortAscending) {
-                            _sourceFiltered.sort((a, b) =>
-                                b["$_sortColumn"].compareTo(a["$_sortColumn"]));
+                          setState(() {
+                            _sortColumn = value;
+                            _sortAscending = !_sortAscending;
+                            if (_sortAscending) {
+                              _sourceFiltered.sort((a, b) => b["$_sortColumn"]
+                                  .compareTo(a["$_sortColumn"]));
+                            } else {
+                              _sourceFiltered.sort((a, b) => a["$_sortColumn"]
+                                  .compareTo(b["$_sortColumn"]));
+                            }
+                            var rangeTop =
+                                widget.currentPerPage < _sourceFiltered.length
+                                    ? widget.currentPerPage
+                                    : _sourceFiltered.length;
+                            _source =
+                                _sourceFiltered.getRange(0, rangeTop).toList();
+                            _searchKey = value;
+
+                            _isLoading = false;
+                          });
+                        },
+                        expanded: _expanded,
+                        sortAscending: _sortAscending,
+                        sortColumn: _sortColumn,
+                        isLoading: _isLoading,
+
+                        onSelect: (value, item) {
+                          print("$value  $item ");
+                          if (value!) {
+                            setState(() => _selecteds.add(item));
                           } else {
-                            _sourceFiltered.sort((a, b) =>
-                                a["$_sortColumn"].compareTo(b["$_sortColumn"]));
+                            setState(() =>
+                                _selecteds.removeAt(_selecteds.indexOf(item)));
                           }
-                          var rangeTop =
-                              widget.currentPerPage < _sourceFiltered.length
-                                  ? widget.currentPerPage
-                                  : _sourceFiltered.length;
-                          _source =
-                              _sourceFiltered.getRange(0, rangeTop).toList();
-                          _searchKey = value;
-
-                          _isLoading = false;
-                        });
-                      },
-                      expanded: _expanded,
-                      sortAscending: _sortAscending,
-                      sortColumn: _sortColumn,
-                      isLoading: _isLoading,
-                      onSelect: (value, item) {
-                        print("$value  $item ");
-                        if (value!) {
-                          setState(() => _selecteds.add(item));
-                        } else {
-                          setState(() =>
-                              _selecteds.removeAt(_selecteds.indexOf(item)));
-                        }
-                      },
-                      onSelectAll: (value) {
-                        if (value!) {
-                          setState(() => _selecteds =
-                              _source.map((entry) => entry).toList().cast());
-                        } else {
-                          setState(() => _selecteds.clear());
-                        }
-                      },
-                      headerDecoration: const BoxDecoration(
-                          color: Colors.grey,
+                        },
+                        onSelectAll: (value) {
+                          if (value!) {
+                            setState(() => _selecteds =
+                                _source.map((entry) => entry).toList().cast());
+                          } else {
+                            setState(() => _selecteds.clear());
+                          }
+                        },
+                        headerDecoration: BoxDecoration(
+                            color: Colors.grey.shade600,
+                            border: Border(
+                                bottom:
+                                    BorderSide(color: Colors.red, width: 1))),
+                        selectedDecoration: BoxDecoration(
                           border: Border(
-                              bottom: BorderSide(color: Colors.red, width: 1))),
-                      selectedDecoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                color: Colors.green[300]!, width: 1)),
-                        color: Colors.green,
+                              bottom: BorderSide(
+                                  color: Colors.teal.shade800, width: 1)),
+                          color: Colors.teal.shade500,
+                        ),
+                        headerTextStyle:
+                            Styles.textStyle14.copyWith(color: Colors.white),
+                        rowTextStyle: Styles.textStyle14.copyWith(
+                            color: Theme.of(context).colorScheme.secondary),
+                        selectedTextStyle:
+                            Styles.textStyle14.copyWith(color: Colors.white),
                       ),
-                      headerTextStyle: const TextStyle(color: Colors.white),
-                      rowTextStyle: const TextStyle(color: Colors.green),
-                      selectedTextStyle: const TextStyle(color: Colors.white),
                     ),
                   ),
-                ),
-              ])),
+                ]),
+          )),
         );
       },
     );

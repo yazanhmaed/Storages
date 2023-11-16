@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
 
 import '../../../resources/color_manager.dart';
@@ -7,11 +10,12 @@ class InfoScreen extends StatefulWidget {
   const InfoScreen({
     super.key,
     required this.scrollController,
-    required this.data, this.delete,
+    required this.data,
+    this.delete,
   });
   final ScrollController scrollController;
   final Map<String, dynamic> data;
- final Function()? delete;
+  final Function()? delete;
 
   @override
   State<InfoScreen> createState() => _InfoScreenState();
@@ -72,7 +76,6 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
         (MediaQuery.of(context).size.width / 1.2) +
         24.0;
     return Material(
-      color: Colors.amber,
       child: Stack(
         children: <Widget>[
           // Column(
@@ -113,32 +116,37 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
               children: [
                 Column(
                   children: [
-                    const Text('أسم المنتج'),
-                    Text('${widget.data['itemName']}'),
+                    Text('أسم المنتج', style: Styles.textStyle14),
+                    Text('${widget.data['itemName']}',
+                        style: Styles.textStyle14),
                   ],
                 ),
                 Column(
                   children: [
-                    const Text('الكمية'),
-                    Text('${widget.data['itemCount']}'),
+                    Text('الكمية', style: Styles.textStyle14),
+                    Text('${widget.data['itemCount']}',
+                        style: Styles.textStyle14),
                   ],
                 ),
                 Column(
                   children: [
-                    const Text('سعر البيع'),
-                    Text('${widget.data['itemPrice']}'),
+                    Text('سعر البيع', style: Styles.textStyle14),
+                    Text('${widget.data['itemPrice']}',
+                        style: Styles.textStyle14),
                   ],
                 ),
                 Column(
                   children: [
-                    const Text('التكلفة'),
-                    Text('${widget.data['itemCost']}'),
+                    Text('التكلفة', style: Styles.textStyle14),
+                    Text('${widget.data['itemCost']}',
+                        style: Styles.textStyle14),
                   ],
                 ),
                 Column(
                   children: [
-                    const Text('التعبئة'),
-                    Text('${widget.data['itemFill']}'),
+                    Text('التعبئة', style: Styles.textStyle14),
+                    Text('${widget.data['itemFill']}',
+                        style: Styles.textStyle14),
                   ],
                 ),
               ],
@@ -179,16 +187,8 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                           padding: const EdgeInsets.only(top: 20),
                           child: Row(
                             children: [
-                              const Text(
-                                'اضافة كمية للمخزون',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 22,
-                                  letterSpacing: 0.27,
-                                  color: Colors.green,
-                                ),
-                              ),
+                              Text('اضافة كمية للمخزون',
+                                  style: Styles.textStyle20),
                               Expanded(
                                 child: CustomTextField(
                                   height: '',
@@ -218,16 +218,9 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'حذف المنتج ',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 22,
-                                    letterSpacing: 0.27,
-                                    color: Colors.green,
-                                  ),
-                                ),
+                                const Text('حذف المنتج ',
+                                    textAlign: TextAlign.left,
+                                    style: Styles.textStyle20),
                                 FloatingActionButton(
                                   onPressed: widget.delete,
                                   child: const Icon(Icons.delete),
@@ -245,16 +238,9 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'تعديل بيانات المنتج ',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 22,
-                                    letterSpacing: 0.27,
-                                    color: Colors.green,
-                                  ),
-                                ),
+                                const Text('تعديل بيانات المنتج ',
+                                    textAlign: TextAlign.left,
+                                    style: Styles.textStyle20),
                                 FloatingActionButton(
                                   onPressed: () {},
                                   child: const Icon(Icons.edit_document),
@@ -301,7 +287,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                       },
                       child: const Icon(
                         Icons.keyboard_arrow_down_outlined,
-                        color: Colors.brown,
+                        color: Colors.white,
                         size: 28,
                       ),
                     ),
