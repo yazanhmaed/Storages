@@ -6,7 +6,6 @@ import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/storage_screen/data_page.dart';
 
 class AddProductScreen extends StatelessWidget {
   AddProductScreen({super.key});
@@ -209,6 +208,7 @@ class AddProductScreen extends StatelessWidget {
                                   // القيام بالإجراءات المطلوبة هنا
                                   print('11111111111111111111111');
                                   cubit.insertToDatabase(
+                                    itemNumber: int.tryParse(itemId.text)!,
                                     itemName: itemName.text,
                                     itemPrice: int.tryParse(itemPrice.text),
                                     itemCost: int.tryParse(itemCost.text),

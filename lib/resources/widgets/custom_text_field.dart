@@ -18,6 +18,7 @@ class CustomTextField extends StatelessWidget {
     this.validate,
     this.inputFormatters,
     this.hintText,
+    this.readOnly=false,
   });
   final FormFieldValidator<String>? validate;
   final bool obscureText;
@@ -33,12 +34,14 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final void Function(String?)? onSaved;
   final List<TextInputFormatter>? inputFormatters;
+ final bool? readOnly;
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.all(10),
       child: TextFormField(
+        readOnly: readOnly!,
         obscureText: obscureText,
         textInputAction: TextInputAction.next,
         obscuringCharacter: "*",

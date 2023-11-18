@@ -41,7 +41,7 @@ class _DataPageState extends State<DataPage> {
   var random = Random();
 
   List<Map<String, dynamic>> _generateData() {
-    print('le: ${MicroCubit.get(context).i.length}');
+  
     for (var data in MicroCubit.get(context).i) {
       MicroCubit.get(context).temps.add({
         'itemNumber': data.itemNumber,
@@ -323,6 +323,7 @@ class _DataPageState extends State<DataPage> {
                                     bottomSheetOffset) =>
                                 InfoScreen(
                               scrollController: scrollController,
+                              cubit: cubit,
                               data: data,
                               delete: () {
                                 cubit.delete(data['itemNumber']).then((value) {
@@ -330,6 +331,7 @@ class _DataPageState extends State<DataPage> {
                                   // navigateAndFinish(context, DataPage(currentPerPage: cubit.i.length));
                                 });
                               },
+                              
                             ),
                             isExpand: false,
                           );

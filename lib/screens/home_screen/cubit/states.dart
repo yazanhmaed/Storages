@@ -16,3 +16,5 @@ class GetDatabaseState extends MicroStates {}
 
 class InsertDatabaseState extends MicroStates {}
 class DeleteDatabaseState extends MicroStates {}
+class UpdataDatabaseState extends MicroStates {}
+class UpdataDatabaseErrorState extends MicroStates {}

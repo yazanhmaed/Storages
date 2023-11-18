@@ -31,7 +31,7 @@ class MicroCubit extends Cubit<MicroStates> {
         print('Data base create');
         dataBase
             .execute(
-                'CREATE TABLE items(itemNumber INTEGER PRIMARY KEY,itemName TEXT,itemPrice INTEGER,itemCost INTEGER , itemFill INTEGER,itemCount INTEGER)')
+                'CREATE TABLE items(itemNumber INTEGER ,itemName TEXT,itemPrice INTEGER,itemCost INTEGER , itemFill INTEGER,itemCount INTEGER)')
             .then((value) {
           print('create table');
         }).catchError((error) {
@@ -49,6 +49,7 @@ class MicroCubit extends Cubit<MicroStates> {
   }
 
   void insertToDatabase({
+    required int itemNumber,
     required String itemName,
     int? itemPrice,
     int? itemCost,
@@ -62,7 +63,7 @@ class MicroCubit extends Cubit<MicroStates> {
 
     await dataBase.transaction((txn) => txn
             .rawInsert(
-                'INSERT INTO items(itemName,itemPrice,itemCost,itemFill,itemCount) VALUES("$itemName","$itemPrice","$itemCost","$itemFill","$itemCount")')
+                'INSERT INTO items(itemNumber,itemName,itemPrice,itemCost,itemFill,itemCount) VALUES("$itemNumber","$itemName","$itemPrice","$itemCost","$itemFill","$itemCount")')
             .then((value) {
           print('$value inserted successfuly');
           getDataFromDatabase(dataBase);
@@ -114,11 +115,37 @@ class MicroCubit extends Cubit<MicroStates> {
   Future delete(int id) async {
     await dataBase.delete('items',
         where: 'itemNumber = ?', whereArgs: [id]).then((value) {
-          
       getDataFromDatabase(dataBase);
       emit(DeleteDatabaseState());
     }).catchError((onError) {
       print(onError);
+    });
+  }
+
+  void plusCount({
+    required int count,
+    required int number,
+  }) async {
+    await dataBase
+        .update('items', {'itemCount': count},
+            where: 'itemNumber = ?', whereArgs: ['$number'])
+        .then((value) {
+      getDataFromDatabase(dataBase);
+      emit(UpdataDatabaseState());
+    }).catchError((onError) {
+      print(onError);
+      emit(UpdataDatabaseErrorState());
+    });
+  }
+
+  Future update({required ItemModel item}) async {
+    await dataBase.update('items', item.toMap(),
+        where: 'itemNumber = ?', whereArgs: [item.itemNumber]).then((value) {
+      getDataFromDatabase(dataBase);
+      emit(UpdataDatabaseState());
+    }).catchError((onError) {
+      print(onError);
+      emit(UpdataDatabaseErrorState());
     });
   }
   // static Future<int> deleteAll() async {

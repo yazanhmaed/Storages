@@ -2,11 +2,12 @@
 
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
+import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/storage_screen/data_page.dart';
+import 'package:storage/screens/inventory/edit_item_screen.dart';
 
 import '../../../resources/color_manager.dart';
 
@@ -16,10 +17,12 @@ class InfoScreen extends StatefulWidget {
     required this.scrollController,
     required this.data,
     this.delete,
+    required this.cubit,
   });
   final ScrollController scrollController;
   final Map<String, dynamic> data;
   final Function()? delete;
+  final MicroCubit cubit;
 
   @override
   State<InfoScreen> createState() => _InfoScreenState();
@@ -80,9 +83,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
         (MediaQuery.of(context).size.width / 1.2) +
         24.0;
     return BlocConsumer<MicroCubit, MicroStates>(
-      listener: (context, state) {
-         
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Material(
           child: Stack(
@@ -119,43 +120,83 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
               //   ],
               // ),
               Padding(
-                padding: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Column(
                       children: [
-                        Text('أسم المنتج', style: Styles.textStyle14),
-                        Text('${widget.data['itemName']}',
-                            style: Styles.textStyle14),
+                        Text('أسم المنتج', style: Styles.textStyle18),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(vertical: 15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(width: 2, color: Colors.green),
+                              color: Colors.green.shade200),
+                          child: Text('${widget.data['itemName']}',
+                              style: Styles.textStyle18),
+                        ),
                       ],
                     ),
                     Column(
                       children: [
-                        Text('الكمية', style: Styles.textStyle14),
-                        Text('${widget.data['itemCount']}',
-                            style: Styles.textStyle14),
+                        Text('الكمية', style: Styles.textStyle18),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(vertical: 15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(width: 2, color: Colors.green),
+                              color: Colors.green.shade200),
+                          child: Text('${widget.data['itemCount']}',
+                              style: Styles.textStyle18),
+                        ),
                       ],
                     ),
                     Column(
                       children: [
-                        Text('سعر البيع', style: Styles.textStyle14),
-                        Text('${widget.data['itemPrice']}',
-                            style: Styles.textStyle14),
+                        Text('سعر البيع', style: Styles.textStyle18),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(vertical: 15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(width: 2, color: Colors.green),
+                              color: Colors.green.shade200),
+                          child: Text('${widget.data['itemPrice']}',
+                              style: Styles.textStyle18),
+                        ),
                       ],
                     ),
                     Column(
                       children: [
-                        Text('التكلفة', style: Styles.textStyle14),
-                        Text('${widget.data['itemCost']}',
-                            style: Styles.textStyle14),
+                        Text('التكلفة', style: Styles.textStyle18),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(vertical: 15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(width: 2, color: Colors.green),
+                              color: Colors.green.shade200),
+                          child: Text('${widget.data['itemCost']}',
+                              style: Styles.textStyle18),
+                        ),
                       ],
                     ),
                     Column(
                       children: [
-                        Text('التعبئة', style: Styles.textStyle14),
-                        Text('${widget.data['itemFill']}',
-                            style: Styles.textStyle14),
+                        Text('التعبئة', style: Styles.textStyle18),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(vertical: 15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(width: 2, color: Colors.green),
+                              color: Colors.green.shade200),
+                          child: Text('${widget.data['itemFill']}',
+                              style: Styles.textStyle18),
+                        ),
                       ],
                     ),
                   ],
@@ -214,7 +255,17 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   FloatingActionButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      widget.cubit.plusCount(
+                                          count:
+                                              (int.tryParse(itemCountr.text)!) +
+                                                  int.tryParse(widget
+                                                      .data['itemCount']
+                                                      .toString())!,
+                                          number: widget.data['itemNumber']);
+                                      // itemCountr.clear();
+                                      Navigator.of(context).pop();
+                                    },
                                     child: const Icon(Icons.add),
                                   )
                                 ],
@@ -255,7 +306,24 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                                         textAlign: TextAlign.left,
                                         style: Styles.textStyle20),
                                     FloatingActionButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        navigateTo(
+                                            context,
+                                            EditProductScreen(
+                                              valueId:
+                                                  widget.data['itemNumber'],
+                                              valueName:
+                                                  widget.data['itemName'],
+                                              valueCost:
+                                                  widget.data['itemCost'],
+                                              valueCountr:
+                                                  widget.data['itemCount'],
+                                              valueFill:
+                                                  widget.data['itemFill'],
+                                              valuePrice:
+                                                  widget.data['itemPrice'],
+                                            ));
+                                      },
                                       child: const Icon(Icons.edit_document),
                                     )
                                   ],
