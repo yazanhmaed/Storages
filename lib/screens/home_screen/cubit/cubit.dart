@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:storage/model/client_model.dart';
 import 'package:storage/model/item_model.dart';
 
 import 'package:storage/screens/home_screen/cubit/states.dart';
@@ -22,25 +23,35 @@ class MicroCubit extends Cubit<MicroStates> {
   }
 
   late Database dataBase;
-
   void createDatabase() {
     openDatabase(
       'add.db',
-      version: 1,
-      onCreate: (dataBase, version) {
-        print('Data base create');
-        dataBase
+      version: 2,
+      onCreate: (database, version) async {
+        print('Database created');
+        await database
             .execute(
-                'CREATE TABLE items(itemNumber INTEGER ,itemName TEXT,itemPrice INTEGER,itemCost INTEGER , itemFill INTEGER,itemCount INTEGER)')
-            .then((value) {
-          print('create table');
+          'CREATE TABLE items(itemNumber INTEGER  ,itemName TEXT,itemPrice INTEGER,itemCost INTEGER , itemFill INTEGER,itemCount INTEGER)',
+        )
+            .then((_) {
+          print('Items table created');
         }).catchError((error) {
-          print('Error when Criating table${error.toString()}');
+          print('Error creating Items table: ${error.toString()}');
+        });
+
+        await database
+            .execute(
+          'CREATE TABLE clients(clientId INTEGER PRIMARY KEY ,clientName TEXT,clientNOTE TEXT,clientPhone INTEGER)',
+        )
+            .then((_) {
+          print('Clients table created');
+        }).catchError((error) {
+          print('Error creating Clients table: ${error.toString()}');
         });
       },
-      onOpen: (dataBase) {
-        getDataFromDatabase(dataBase);
-        print('Data base open');
+      onOpen: (database) {
+        getDataFromDatabase(database);
+        print('Database opened');
       },
     ).then((value) {
       dataBase = value;
@@ -153,4 +164,46 @@ class MicroCubit extends Cubit<MicroStates> {
   //   return await _db!
   //       .delete(_tableName);
   // }
+
+//      ###################  Client   ######################/
+  void insertClientDatabase({
+    required String clientName,
+    required String clientPhone,
+    String? clientNOTE,
+  }) async {
+    clientNOTE ??= "";
+
+    await dataBase.transaction((txn) => txn
+            .rawInsert(
+                'INSERT INTO clients(clientName,clientPhone,clientNOTE) VALUES("$clientName","$clientPhone","$clientNOTE")')
+            .then((value) {
+          print('$value inserted successfuly');
+          getDataFromClientDatabase(dataBase);
+          emit(InsertDatabaseState());
+        }).catchError((error) {
+          print('Error when Inserting New Record${error.toString()}');
+        }));
+  }
+
+  List<Map> cl = [];
+  List<ClientModel> c = [];
+  List<Map<String, dynamic>> cleints = [];
+  void getDataFromClientDatabase(dataBase) {
+    print('ccccccccccccccccccccccc');
+    cl = [];
+    c = [];
+    cleints = [];
+    emit(GetDatabaseLodingState());
+    dataBase.rawQuery('SELECT * FROM  clients').then((value) {
+      value.forEach((element) {
+        cl.add(element);
+        print(cl.length);
+        c.add(ClientModel.fromJson(element));
+        print('cl');
+        print(cl);
+      });
+
+      emit(GetDatabaseState());
+    });
+  }
 }

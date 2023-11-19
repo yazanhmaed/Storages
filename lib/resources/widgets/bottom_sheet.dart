@@ -132,7 +132,8 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                           margin: EdgeInsets.symmetric(vertical: 15),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green),
+                              border: Border.all(width: 2, color: Colors.green,
+                              ),
                               color: Colors.green.shade200),
                           child: Text('${widget.data['itemName']}',
                               style: Styles.textStyle18),

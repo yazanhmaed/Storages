@@ -3,6 +3,7 @@
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/resources/styles.dart';
+import 'package:storage/screens/client/client_screen.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 import 'package:storage/screens/inventory/inventory_screen.dart';
@@ -46,6 +47,29 @@ class LayoutScreen extends StatelessWidget {
                         height: 200,
                         child: Text(
                           'المخزون',
+                          style: Styles.textStyle25,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ClientScreen(),
+                            ));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10)),
+                        height: 200,
+                        child: Text(
+                          'العملاء',
                           style: Styles.textStyle25,
                           textAlign: TextAlign.center,
                         ),

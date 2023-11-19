@@ -18,9 +18,12 @@ class CustomTextField extends StatelessWidget {
     this.validate,
     this.inputFormatters,
     this.hintText,
-    this.readOnly=false,
+    this.readOnly = false,
+    this.enabled = true,
+    this.vertical = 16,
   });
   final FormFieldValidator<String>? validate;
+  final double vertical;
   final bool obscureText;
   final String height;
   final String? errorText;
@@ -34,13 +37,15 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final void Function(String?)? onSaved;
   final List<TextInputFormatter>? inputFormatters;
- final bool? readOnly;
+  final bool? readOnly;
+  final bool enabled;
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.all(10),
       child: TextFormField(
+        enabled: enabled,
         readOnly: readOnly!,
         obscureText: obscureText,
         textInputAction: TextInputAction.next,
@@ -55,6 +60,7 @@ class CustomTextField extends StatelessWidget {
 
         cursorColor: Colors.black,
         decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: vertical),
             errorText: errorText,
             isDense: true, //بتصغر الحجم
             prefixIcon: prefixIcon,

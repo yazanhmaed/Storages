@@ -59,6 +59,7 @@ class AddProductScreen extends StatelessWidget {
                               ),
                               Expanded(
                                 child: CustomTextField(
+                                  enabled: false,
                                   height: '',
                                   controller: itemId,
                                   keyboardType: TextInputType.number,
