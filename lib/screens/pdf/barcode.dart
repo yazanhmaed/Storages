@@ -16,9 +16,7 @@ class PdfBarcode {
   static Future<File> generate(List<List<dynamic>> data) async {
     final pdf = pw.Document();
 
-    // final iconImage =
-    //     (await rootBundle.load('assets/icon.png')).buffer.asUint8List();
-    var font = Font.ttf(await rootBundle.load("assets/font/HacenTunisia.ttf"));
+    var font = Font.ttf(await rootBundle.load("assets/fonts/HacenTunisia.ttf"));
 
     final tableHeaders = [
       'رقم المنتج',
@@ -65,120 +63,27 @@ class PdfBarcode {
     ];
 
     pdf.addPage(pw.Page(
-      build: (context) => pw.GridView(
-          crossAxisCount: 3,
-          padding: const EdgeInsets.all(20),
-          children: [
-            Container(
-              height: 15,
-              child: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: '123456789',
-              ),
-            ),
-            Container(
-              height: 15,
-              child: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: '123456889',
-              ),
-            ),
-            Container(
-              height: 15,
-              child: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: '9876543210',
-              ),
-            ),
-            Container(
-              height: 15,
-              child: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: '123456789',
-              ),
-            ),
-            Container(
-              height: 15,
-              child: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: '123456889',
-              ),
-            ),
-            Container(
-              height: 15,
-              child: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: '9876543210',
-              ),
-            ),
-            Container(
-              height: 15,
-              child: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: '123456789',
-              ),
-            ),
-            Container(
-              child: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: '123456889',
-              ),
-            ),
-            Container(
-              child: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: '9876543210',
-              ),
-            ),
-          ]),
-    )
-        // pw.MultiPage(
-        //   theme: ThemeData.withFont(
-        //       base: Font.ttf(
-        //           await rootBundle.load("assets/font/HacenTunisia.ttf"))),
-        //   textDirection: TextDirection.rtl,
-        //   // header: (context) {
-        //   //   return pw.Text(
-        //   //     'Flutter Approach',
-        //   //     style: pw.TextStyle(
-        //   //       fontWeight: pw.FontWeight.bold,
-        //   //       fontSize: 15.0,
-        //   //     ),
-        //   //   );
-        //   // },
-        //   build: (context) {
-        //     return [
-        //       pw.GridView(
-        //         crossAxisCount: 2,
-        //         children: [
-        //            Container(
-        //           padding: const EdgeInsets.all(8),
-        //           child:  Text('First', style: TextStyle(fontSize: 20)),
-
-        //         ),
-        //            Container(
-        //           padding: const EdgeInsets.all(8),
-        //           child:  Text('First', style: TextStyle(fontSize: 20)),
-
-        //         ),
-        //            Container(
-        //           padding: const EdgeInsets.all(8),
-        //           child:  Text('First', style: TextStyle(fontSize: 20)),
-
-        //         ),
-        //            Container(
-        //           padding: const EdgeInsets.all(8),
-        //           child:  Text('First', style: TextStyle(fontSize: 20)),
-
-        //         ),
-        //         ]
-        //       )
-
-        //     ];
-        //   },
-        // ),
-
-        );
+      build: (context) {
+        return pw.GridView(
+            crossAxisCount: 4,
+            mainAxisSpacing: 2,
+            childAspectRatio: 0.8,
+            crossAxisSpacing: 4,
+            padding: const EdgeInsets.all(20),
+            children: [
+              for (var i = 0; i < data.length; i++)
+                Container(
+                  height: 5,
+                  decoration: BoxDecoration(border: Border.all()),
+                  padding: const EdgeInsets.all(20),
+                  child: BarcodeWidget(
+                      barcode: Barcode.code128(),
+                      data: '${data[i][0]}',
+                      textPadding: 5),
+                ),
+            ]);
+      },
+    ));
 
     return FileHandleApi.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
   }

@@ -132,7 +132,9 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                           margin: EdgeInsets.symmetric(vertical: 15),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green,
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.green,
                               ),
                               color: Colors.green.shade200),
                           child: Text('${widget.data['itemName']}',
@@ -265,7 +267,8 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                                                       .toString())!,
                                           number: widget.data['itemNumber']);
                                       // itemCountr.clear();
-                                      Navigator.of(context).pop();
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop();
                                     },
                                     child: const Icon(Icons.add),
                                   )
@@ -286,7 +289,14 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                                         textAlign: TextAlign.left,
                                         style: Styles.textStyle20),
                                     FloatingActionButton(
-                                      onPressed: widget.delete,
+                                      onPressed: () {
+                                        widget.cubit
+                                            .delete(widget.data['itemNumber'])
+                                            .then((value) {
+                                        
+                                          // navigateAndFinish(context, DataPage(currentPerPage: cubit.i.length));
+                                        });
+                                      },
                                       child: const Icon(Icons.delete),
                                     )
                                   ],

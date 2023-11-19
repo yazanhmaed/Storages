@@ -5,11 +5,14 @@ import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
+import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/bottom_sheet.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
+import 'package:storage/screens/inventory/inventory_screen.dart';
 import 'package:storage/screens/pdf/availble_products.dart';
+import 'package:storage/screens/pdf/barcode.dart';
 import 'package:storage/screens/pdf/file_handle_api.dart';
 
 // ignore: must_be_immutable
@@ -41,7 +44,6 @@ class _DataPageState extends State<DataPage> {
   var random = Random();
 
   List<Map<String, dynamic>> _generateData() {
-  
     for (var data in MicroCubit.get(context).i) {
       MicroCubit.get(context).temps.add({
         'itemNumber': data.itemNumber,
@@ -174,7 +176,7 @@ class _DataPageState extends State<DataPage> {
           _initializeData();
         }
         if (state is DeleteDatabaseState) {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context, rootNavigator: true).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
                 return DataPage(currentPerPage: widget.currentPerPage);
@@ -198,6 +200,11 @@ class _DataPageState extends State<DataPage> {
                 icon: const Icon(Icons.refresh_sharp),
               ),
             ],
+            leading: IconButton(
+                onPressed: () {
+                  navigateAndFinish(context, InventoryScreen());
+                },
+                icon: Icon(Icons.arrow_back_ios)),
           ),
           // drawer: Drawer(
           //   child: ListView(
@@ -238,28 +245,56 @@ class _DataPageState extends State<DataPage> {
                       shadowColor: Colors.black,
                       clipBehavior: Clip.none,
                       child: ResponsiveDatatable(
-                        title: TextButton.icon(
-                          onPressed: () async {
-                            // generate pdf file
-                            if (_selecteds.isEmpty) {
-                              final pdfFile =
-                                  await PdfAvailableProducts.generate(
+                        hideUnderline: false,
+                        title: Row(
+                          children: [
+                            TextButton.icon(
+                              onPressed: () async {
+                                // generate pdf file
+                                if (_selecteds.isEmpty) {
+                                  final pdfFile =
+                                      await PdfAvailableProducts.generate(
+                                          sourceOriginal
+                                              .map((map) => map.values.toList())
+                                              .toList());
+                                  FileHandleApi.openFile(pdfFile);
+                                } else {
+                                  final pdfFile =
+                                      await PdfAvailableProducts.generate(
+                                          _selecteds
+                                              .map((map) => map.values.toList())
+                                              .toList());
+                                  FileHandleApi.openFile(pdfFile);
+                                }
+
+                                // opening the pdf file
+                              },
+                              icon: const Icon(Icons.receipt_long_rounded),
+                              label: const Text("تقرير"),
+                            ),
+                            TextButton.icon(
+                              onPressed: () async {
+                                // generate pdf file
+                                if (_selecteds.isEmpty) {
+                                  final pdfFile = await PdfBarcode.generate(
                                       sourceOriginal
                                           .map((map) => map.values.toList())
                                           .toList());
-                              FileHandleApi.openFile(pdfFile);
-                            } else {
-                              final pdfFile =
-                                  await PdfAvailableProducts.generate(_selecteds
-                                      .map((map) => map.values.toList())
-                                      .toList());
-                              FileHandleApi.openFile(pdfFile);
-                            }
+                                  FileHandleApi.openFile(pdfFile);
+                                } else {
+                                  final pdfFile = await PdfBarcode.generate(
+                                      _selecteds
+                                          .map((map) => map.values.toList())
+                                          .toList());
+                                  FileHandleApi.openFile(pdfFile);
+                                }
 
-                            // opening the pdf file
-                          },
-                          icon: const Icon(Icons.receipt_long_rounded),
-                          label: const Text("تقرير"),
+                                // opening the pdf file
+                              },
+                              icon: const Icon(Icons.qr_code_2_outlined),
+                              label: const Text("باركود"),
+                            ),
+                          ],
                         ),
                         reponseScreenSizes: const [ScreenSize.sm],
                         actions: [
@@ -325,13 +360,7 @@ class _DataPageState extends State<DataPage> {
                               scrollController: scrollController,
                               cubit: cubit,
                               data: data,
-                              delete: () {
-                                cubit.delete(data['itemNumber']).then((value) {
-                                  Navigator.of(context).pop();
-                                  // navigateAndFinish(context, DataPage(currentPerPage: cubit.i.length));
-                                });
-                              },
-                              
+                              delete: () {},
                             ),
                             isExpand: false,
                           );

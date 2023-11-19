@@ -50,7 +50,8 @@ class MicroCubit extends Cubit<MicroStates> {
         });
       },
       onOpen: (database) {
-        getDataFromDatabase(database);
+        getDataFromDatabase(database, dataClients: true, dataItems: true);
+        // getDataFromClientDatabase(dataBase);
         print('Database opened');
       },
     ).then((value) {
@@ -77,7 +78,7 @@ class MicroCubit extends Cubit<MicroStates> {
                 'INSERT INTO items(itemNumber,itemName,itemPrice,itemCost,itemFill,itemCount) VALUES("$itemNumber","$itemName","$itemPrice","$itemCost","$itemFill","$itemCount")')
             .then((value) {
           print('$value inserted successfuly');
-          getDataFromDatabase(dataBase);
+          getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
           emit(InsertDatabaseState());
         }).catchError((error) {
           print('Error when Inserting New Record${error.toString()}');
@@ -87,26 +88,45 @@ class MicroCubit extends Cubit<MicroStates> {
   List<Map> items = [];
   List<ItemModel> i = [];
   List<Map<String, dynamic>> temps = [];
-  void getDataFromDatabase(dataBase) {
-    items = [];
-    i = [];
-    temps = [];
+  void getDataFromDatabase(dataBase,
+      {required bool dataItems, required bool dataClients}) {
     emit(GetDatabaseLodingState());
-    dataBase.rawQuery('SELECT * FROM  items').then((value) {
-      value.forEach((element) {
-        items.add(element);
+    if (dataItems == true) {
+      items = [];
+      i = [];
+      temps = [];
+      dataBase.rawQuery('SELECT * FROM  items').then((value) {
+        value.forEach((element) {
+          items.add(element);
 
-        i.add(ItemModel.fromJson(element));
+          i.add(ItemModel.fromJson(element));
 
-        // print('object: ${i.length}');
+          // print('object: ${i.length}');
+        });
+        // print(items);
+        // print(items.length);
+        emit(GetDatabaseState());
       });
-      // print(items);
-      // print(items.length);
-      emit(GetDatabaseState());
-    });
+    }
+    if (dataClients == true) {
+      cl = [];
+      c = [];
+      cleints = [];
+      dataBase.rawQuery('SELECT * FROM  clients').then((value) {
+        value.forEach((element) {
+          cl.add(element);
+          // print(cl.length);
+          c.add(ClientModel.fromJson(element));
+          print('cl');
+          print(c);
+        });
+
+        emit(GetDatabaseState());
+      });
+    }
   }
 
-  String randomNumber = '100000000000';
+  String randomNumber = '0000000';
   void generateRandomNumber(int length) {
     Random random = Random();
     StringBuffer buffer = StringBuffer();
@@ -126,7 +146,7 @@ class MicroCubit extends Cubit<MicroStates> {
   Future delete(int id) async {
     await dataBase.delete('items',
         where: 'itemNumber = ?', whereArgs: [id]).then((value) {
-      getDataFromDatabase(dataBase);
+      getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
       emit(DeleteDatabaseState());
     }).catchError((onError) {
       print(onError);
@@ -141,7 +161,7 @@ class MicroCubit extends Cubit<MicroStates> {
         .update('items', {'itemCount': count},
             where: 'itemNumber = ?', whereArgs: ['$number'])
         .then((value) {
-      getDataFromDatabase(dataBase);
+      getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
       emit(UpdataDatabaseState());
     }).catchError((onError) {
       print(onError);
@@ -152,7 +172,7 @@ class MicroCubit extends Cubit<MicroStates> {
   Future update({required ItemModel item}) async {
     await dataBase.update('items', item.toMap(),
         where: 'itemNumber = ?', whereArgs: [item.itemNumber]).then((value) {
-      getDataFromDatabase(dataBase);
+      getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
       emit(UpdataDatabaseState());
     }).catchError((onError) {
       print(onError);
@@ -178,7 +198,7 @@ class MicroCubit extends Cubit<MicroStates> {
                 'INSERT INTO clients(clientName,clientPhone,clientNOTE) VALUES("$clientName","$clientPhone","$clientNOTE")')
             .then((value) {
           print('$value inserted successfuly');
-          getDataFromClientDatabase(dataBase);
+          getDataFromDatabase(dataBase, dataClients: true, dataItems: false);
           emit(InsertDatabaseState());
         }).catchError((error) {
           print('Error when Inserting New Record${error.toString()}');
@@ -188,22 +208,22 @@ class MicroCubit extends Cubit<MicroStates> {
   List<Map> cl = [];
   List<ClientModel> c = [];
   List<Map<String, dynamic>> cleints = [];
-  void getDataFromClientDatabase(dataBase) {
-    print('ccccccccccccccccccccccc');
-    cl = [];
-    c = [];
-    cleints = [];
-    emit(GetDatabaseLodingState());
-    dataBase.rawQuery('SELECT * FROM  clients').then((value) {
-      value.forEach((element) {
-        cl.add(element);
-        print(cl.length);
-        c.add(ClientModel.fromJson(element));
-        print('cl');
-        print(cl);
-      });
+  // void getDataFromClientDatabase(dataBase) {
+  //   print('ccccccccccccccccccccccc');
+  //   cl = [];
+  //   c = [];
+  //   cleints = [];
+  //   emit(GetDatabaseLodingState());
+  //   dataBase.rawQuery('SELECT * FROM  clients').then((value) {
+  //     value.forEach((element) {
+  //       cl.add(element);
+  //       // print(cl.length);
+  //       c.add(ClientModel.fromJson(element));
+  //       print('cl');
+  //       print(c);
+  //     });
 
-      emit(GetDatabaseState());
-    });
-  }
+  //     emit(GetDatabaseState());
+  //   });
+  // }
 }

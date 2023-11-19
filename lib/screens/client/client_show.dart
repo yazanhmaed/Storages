@@ -266,7 +266,7 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
                             Expanded(
                                 child: TextField(
                               decoration: InputDecoration(
-                                  hintText: 'ادخل اسم المنتج',
+                                  hintText: 'ادخل اسم العميل',
                                   hintStyle: Styles.textStyle14,
                                   prefixIcon: IconButton(
                                       icon: const Icon(Icons.cancel),

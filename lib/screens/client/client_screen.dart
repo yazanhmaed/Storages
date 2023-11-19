@@ -8,8 +8,7 @@ import 'package:storage/screens/client/add_client_screen.dart';
 import 'package:storage/screens/client/client_show.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/inventory/add_item_screen.dart';
-import 'package:storage/screens/storage_screen/data_page.dart';
+
 
 class ClientScreen extends StatelessWidget {
   const ClientScreen({super.key});

@@ -140,6 +140,7 @@ class AddClientScreen extends StatelessWidget {
                                       clientName: clientName.text,
                                       clientPhone: clientPhone.text,
                                       clientNOTE: clientNote.text);
+                                  Navigator.of(context).pop();
                                 }
                               },
                               child: Padding(
