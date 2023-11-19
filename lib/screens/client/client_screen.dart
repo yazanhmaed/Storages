@@ -24,7 +24,7 @@ class ClientScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              'المخزون',
+              "",
               style: Styles.textStyle25,
             ),
           ),
@@ -49,8 +49,8 @@ class ClientScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ClientShowScreen(currentPerPage: cubit.c.length),
+                              builder: (context) => ClientShowScreen(
+                                  currentPerPage: cubit.c.length),
                             ));
                       },
                       icon: Icons.search,

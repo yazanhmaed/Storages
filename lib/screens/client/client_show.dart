@@ -1,16 +1,16 @@
 // ignore_for_file: library_private_types_in_public_api, unused_element, avoid_print, avoid_unnecessary_containers, prefer_const_constructors
 
 import 'dart:math';
-import 'package:bottom_sheet/bottom_sheet.dart';
+
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
-import 'package:storage/resources/components.dart';
+
 import 'package:storage/resources/styles.dart';
-import 'package:storage/resources/widgets/bottom_sheet.dart';
+
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/inventory/edit_item_screen.dart';
+
 import 'package:storage/screens/pdf/availble_products.dart';
 import 'package:storage/screens/pdf/file_handle_api.dart';
 
@@ -188,7 +188,7 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              "المنتجات المتوفره في المخزون",
+              "العملاء",
               style: Styles.textStyle25.copyWith(color: Colors.white),
             ),
             actions: [
