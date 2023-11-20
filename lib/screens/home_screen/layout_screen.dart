@@ -7,6 +7,7 @@ import 'package:storage/screens/client/client_screen.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 import 'package:storage/screens/inventory/inventory_screen.dart';
+import 'package:storage/screens/sales/sales_screen.dart';
 
 class LayoutScreen extends StatelessWidget {
   const LayoutScreen({super.key});
@@ -70,6 +71,31 @@ class LayoutScreen extends StatelessWidget {
                         height: 200,
                         child: Text(
                           'العملاء',
+                          style: Styles.textStyle25,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SalesScreen(
+                                currentPerPage: 0,
+                              ),
+                            ));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10)),
+                        height: 200,
+                        child: Text(
+                          'المبيعات',
                           style: Styles.textStyle25,
                           textAlign: TextAlign.center,
                         ),

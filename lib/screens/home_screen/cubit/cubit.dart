@@ -88,6 +88,9 @@ class MicroCubit extends Cubit<MicroStates> {
   List<Map> items = [];
   List<ItemModel> i = [];
   List<Map<String, dynamic>> temps = [];
+  List<Map> cl = [];
+  List<ClientModel> c = [];
+  List<Map<String, dynamic>> cleints = [];
   void getDataFromDatabase(dataBase,
       {required bool dataItems, required bool dataClients}) {
     emit(GetDatabaseLodingState());
@@ -115,10 +118,7 @@ class MicroCubit extends Cubit<MicroStates> {
       dataBase.rawQuery('SELECT * FROM  clients').then((value) {
         value.forEach((element) {
           cl.add(element);
-          // print(cl.length);
           c.add(ClientModel.fromJson(element));
-          print('cl');
-          print(c);
         });
 
         emit(GetDatabaseState());
@@ -205,25 +205,5 @@ class MicroCubit extends Cubit<MicroStates> {
         }));
   }
 
-  List<Map> cl = [];
-  List<ClientModel> c = [];
-  List<Map<String, dynamic>> cleints = [];
-  // void getDataFromClientDatabase(dataBase) {
-  //   print('ccccccccccccccccccccccc');
-  //   cl = [];
-  //   c = [];
-  //   cleints = [];
-  //   emit(GetDatabaseLodingState());
-  //   dataBase.rawQuery('SELECT * FROM  clients').then((value) {
-  //     value.forEach((element) {
-  //       cl.add(element);
-  //       // print(cl.length);
-  //       c.add(ClientModel.fromJson(element));
-  //       print('cl');
-  //       print(c);
-  //     });
-
-  //     emit(GetDatabaseState());
-  //   });
-  // }
+  List<Map<String, dynamic>> salesItems1 = [];
 }

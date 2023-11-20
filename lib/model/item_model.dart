@@ -5,6 +5,9 @@ class ItemModel {
   int? itemCost;
   int? itemFill;
   int? itemCount;
+  int? itemCountb;
+  int? itemCostb;
+  
 
   ItemModel({
     this.itemNumber,
@@ -13,6 +16,8 @@ class ItemModel {
     this.itemCost,
     this.itemFill,
     this.itemCount,
+    this.itemCountb,
+    this.itemCostb,
   });
   ItemModel.fromJson(Map<String, dynamic> json) {
     itemNumber = json['itemNumber'];
@@ -21,9 +26,11 @@ class ItemModel {
     itemCost = json['itemCost'];
     itemFill = json['itemFill'];
     itemCount = json['itemCount'];
+    itemCountb = json['itemCountb'];
+    itemCostb = json['itemCostb'];
   }
 
-    Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'itemNumber': itemNumber,
       'itemName': itemName,
@@ -31,7 +38,8 @@ class ItemModel {
       'itemCost': itemCost,
       'itemFill': itemFill,
       'itemCount': itemCount,
-    
+      'itemCountb': itemCountb,
+      'itemCostb': itemCostb,
     };
   }
 
