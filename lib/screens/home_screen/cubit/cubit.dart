@@ -7,6 +7,7 @@ import 'package:cubit_form/cubit_form.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:storage/model/client_model.dart';
 import 'package:storage/model/item_model.dart';
+import 'package:storage/model/sale_model.dart';
 
 import 'package:storage/screens/home_screen/cubit/states.dart';
 
@@ -205,5 +206,5 @@ class MicroCubit extends Cubit<MicroStates> {
         }));
   }
 
-  List<Map<String, dynamic>> salesItems1 = [];
+
 }

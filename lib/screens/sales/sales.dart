@@ -1,5 +1,7 @@
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
+import 'package:storage/model/client_model.dart';
+import 'package:storage/model/sale_model.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
@@ -23,10 +25,12 @@ class _SalesState extends State<SalesScreen> {
   final String _selectableKey = "itemNumber";
 
   bool isLoading = true;
-
+  List<ClientModel> clientList = [];
   TextEditingController controller = TextEditingController();
-
-  _filterData(value) {
+  TextEditingController nameClient = TextEditingController();
+  bool clientSearch = false;
+  List<SaleModel> salesItems1 = [];
+  _filterSearch(value) {
     setState(() => isLoading = true);
 
     try {
@@ -99,44 +103,79 @@ class _SalesState extends State<SalesScreen> {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = MicroCubit.get(context);
+
         return Scaffold(
           appBar: AppBar(),
           body: Column(
             children: [
-              Row(
+              Column(
                 children: [
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.qr_code_scanner_outlined)),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.contact_emergency_rounded)),
-                  Expanded(
-                      child: TextField(
-                    controller: controller,
-                    decoration: InputDecoration(
-                        hintText: 'ادخل اسم المنتج',
-                        hintStyle: Styles.textStyle14,
-                        prefixIcon: IconButton(
-                            icon: const Icon(Icons.cancel),
-                            onPressed: () {
-                              _initializeData();
-                            }),
-                        suffixIcon: IconButton(
-                            icon: const Icon(Icons.search), onPressed: () {})),
-                    onChanged: (value) {
-                      _filterData(value);
-                    },
-                    onSubmitted: (value) {
-                      _filterData(value);
-                    },
-                  )),
-                  IconButton(
-                      onPressed: () {
-                        cubit.salesItems1 = [];
-                        setState(() {});
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.qr_code_scanner_outlined)),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              clientSearch = !clientSearch;
+                            });
+                          },
+                          icon: const Icon(Icons.contact_emergency_rounded)),
+                      Expanded(
+                          child: TextField(
+                        controller: controller,
+                        decoration: InputDecoration(
+                            hintText: 'ادخل اسم المنتج',
+                            hintStyle: Styles.textStyle14,
+                            prefixIcon: IconButton(
+                                icon: const Icon(Icons.cancel),
+                                onPressed: () {
+                                  _initializeData();
+                                }),
+                            suffixIcon: IconButton(
+                                icon: const Icon(Icons.search),
+                                onPressed: () {})),
+                        onChanged: (value) {
+                          _filterSearch(value);
+                        },
+                        onSubmitted: (value) {
+                          _filterSearch(value);
+                        },
+                      )),
+                      IconButton(
+                          onPressed: () {
+                            salesItems1 = [];
+                            setState(() {});
+                          },
+                          icon: const Icon(Icons.monetization_on_rounded)),
+                    ],
+                  ),
+                  if (clientSearch == true)
+                    TextField(
+                      controller: nameClient,
+                      decoration: InputDecoration(
+                          hintText: 'ادخل اسم العميل',
+                          hintStyle: Styles.textStyle14,
+                          prefixIcon: IconButton(
+                              icon: const Icon(Icons.cancel), onPressed: () {}),
+                          suffixIcon: IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () {})),
+                      onChanged: (value) {
+                        final suggestions = cubit.c.where((e) {
+                          final clientTitle = e.clientName!.toLowerCase();
+                          final input = value.toLowerCase();
+                          return clientTitle.contains(input);
+                        }).toList();
+                        setState(() {
+                          clientList = suggestions;
+                        });
                       },
-                      icon: const Icon(Icons.monetization_on_rounded)),
+                      onSubmitted: (value) {
+                        print(clientList);
+                      },
+                    )
                 ],
               ),
               const ListTile(
@@ -154,53 +193,78 @@ class _SalesState extends State<SalesScreen> {
               Stack(
                 children: [
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height - 200,
+                    height: MediaQuery.sizeOf(context).height - 240,
                     child: ListView.separated(
-                      itemBuilder: (context, index) => ListTile(
-                        leading: Text(cubit.salesItems1[index]['itemName']),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(cubit.salesItems1[index]['itemPrice']
-                                .toString()),
-                            Text(cubit.salesItems1[index]['itemFill']
-                                .toString()),
-                            GestureDetector(
-                              onTap: () {
-                                // هون بنخليه يزود الكمية بس يضغط
-                              },
-                              onLongPress: () {
-                                //بس يضغط كبسة طويلة برجع القيمة واحد
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(border: Border.all()),
-                                child: Text(cubit.salesItems1[index]
-                                        ['itemCountb']
-                                    .toString()),
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: Text(salesItems1[index].itemName!),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(salesItems1[index].itemPrice.toString()),
+                              Text(salesItems1[index].itemFill.toString()),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    salesItems1[index].itemCountb =
+                                        salesItems1[index].itemCountb! + 1;
+                                  });
+                                },
+                                onLongPress: () {
+                                  setState(() {
+                                    salesItems1[index].itemCountb = 1;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration:
+                                      BoxDecoration(border: Border.all()),
+                                  child: Text(
+                                      salesItems1[index].itemCountb.toString()),
+                                ),
                               ),
-                            ),
-                            Text((cubit.salesItems1[index]['itemPrice'] *
-                                    cubit.salesItems1[index]['itemFill'])
-                                .toString()),
-                          ],
-                        ),
-                      ),
-                      itemCount: cubit.salesItems1.length,
+                              Text((salesItems1[index].itemPrice! *
+                                      salesItems1[index].itemFill!)
+                                  .toString()),
+                            ],
+                          ),
+                        );
+                      },
+                      itemCount: salesItems1.length,
                       separatorBuilder: (context, index) => const SizedBox(
                         height: 10,
                       ),
                     ),
                   ),
+                  if (clientList.isNotEmpty)
+                    SizedBox(
+                        height: MediaQuery.sizeOf(context).height - 240,
+                        child: ListView.builder(
+                          itemCount: clientList.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              onTap: () {
+                                setState(() {
+                                  nameClient.text =
+                                      clientList[index].clientName!;
+                                  clientList = [];
+                                });
+                                print(nameClient.text);
+                              },
+                              title: Text('${clientList[index].clientName}'),
+                            );
+                          },
+                        )),
                   if (controller.text.isNotEmpty)
                     SizedBox(
-                        height: MediaQuery.sizeOf(context).height - 200,
+                        height: MediaQuery.sizeOf(context).height - 240,
                         child: ListView.builder(
                           itemCount: source.length,
                           itemBuilder: (context, index) {
                             return ListTile(
                               onTap: () {
-                                cubit.salesItems1.add(source[index]);
+                                salesItems1
+                                    .add(SaleModel.fromJson(source[index]));
                                 setState(() {
                                   controller.clear();
                                 });
