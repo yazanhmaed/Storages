@@ -7,6 +7,7 @@ import 'package:storage/screens/client/client_screen.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 import 'package:storage/screens/inventory/inventory_screen.dart';
+import 'package:storage/screens/sales/sales.dart';
 import 'package:storage/screens/sales/sales_screen.dart';
 
 class LayoutScreen extends StatelessWidget {
@@ -81,9 +82,7 @@ class LayoutScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SalesScreen(
-                                currentPerPage: 0,
-                              ),
+                              builder: (context) => SalesScreen(),
                             ));
                       },
                       child: Container(
