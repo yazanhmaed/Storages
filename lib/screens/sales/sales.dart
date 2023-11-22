@@ -25,6 +25,7 @@ class _SalesState extends State<SalesScreen> {
   List<Map<String, dynamic>> source = [];
   // ignore: unused_field
   final String _selectableKey = "itemNumber";
+  late double total = 0.0;
 
   bool isLoading = true;
   List<ClientModel> clientList = [];
@@ -32,6 +33,17 @@ class _SalesState extends State<SalesScreen> {
   TextEditingController nameClient = TextEditingController();
   bool clientSearch = false;
   List<SaleModel> salesItems1 = [];
+
+  double calculateTotalCost() {
+    double totalCost = 0;
+
+    for (var index = 0; index < salesItems1.length; index++) {
+      totalCost += salesItems1[index].itemCostb ?? 0;
+    }
+
+    return totalCost;
+  }
+
   _filterSearch(value) {
     setState(() => isLoading = true);
 
@@ -253,6 +265,7 @@ class _SalesState extends State<SalesScreen> {
                                             setState(() {
                                               salesItems1[index].itemCountb = 1;
                                             });
+                                            total = calculateTotalCost();
                                           },
                                           child: Container(
                                             padding: const EdgeInsets.all(5),
@@ -263,8 +276,10 @@ class _SalesState extends State<SalesScreen> {
                                                 .toString()),
                                           ),
                                         ),
-                                        Text((salesItems1[index].itemPrice! *
-                                                salesItems1[index].itemFill!)
+                                        Text((salesItems1[index].itemCostb =
+                                                salesItems1[index].itemPrice! *
+                                                    salesItems1[index]
+                                                        .itemCountb!)
                                             .toString()),
                                       ],
                                     ),
@@ -310,11 +325,13 @@ class _SalesState extends State<SalesScreen> {
                                     itemBuilder: (context, index) {
                                       return ListTile(
                                         onTap: () {
+                                          total = calculateTotalCost();
                                           salesItems1.add(SaleModel.fromJson(
                                               source[index]));
                                           setState(() {
                                             controller.clear();
                                           });
+                                          total = calculateTotalCost();
                                         },
                                         title: Row(
                                           mainAxisAlignment:
@@ -340,31 +357,32 @@ class _SalesState extends State<SalesScreen> {
             ),
           ),
           bottomNavigationBar: Card(
-              child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                Text('الاجمالي', style: Styles.textStyle18),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Container(
-                    child: Text('0'),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Text('الاجمالي', style: Styles.textStyle18),
+                  SizedBox(
+                    width: 10,
                   ),
-                ),
-                Text('ع.ق', style: Styles.textStyle18),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Container(
-                    child: Text('0'),
+                  Expanded(
+                    child: Container(
+                      child: Text('${calculateTotalCost()}'),
+                    ),
                   ),
-                ),
-              ],
+                  Text('ع.ق', style: Styles.textStyle18),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Container(
+                      child: Text('0'),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )),
+          ),
         );
       },
     );
