@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/model/client_model.dart';
@@ -105,186 +107,264 @@ class _SalesState extends State<SalesScreen> {
         var cubit = MicroCubit.get(context);
 
         return Scaffold(
-          appBar: AppBar(),
-          body: Column(
-            children: [
-              Column(
-                children: [
-                  Row(
+          appBar: AppBar(
+            title: Text('المبيعات', style: Styles.textStyle25),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
                     children: [
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.qr_code_scanner_outlined)),
-                      IconButton(
-                          onPressed: () {
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.qr_code_scanner_outlined)),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  clientSearch = !clientSearch;
+                                });
+                              },
+                              icon:
+                                  const Icon(Icons.contact_emergency_rounded)),
+                          Expanded(
+                              child: TextField(
+                            controller: controller,
+                            decoration: InputDecoration(
+                              hintText: 'ادخل اسم المنتج',
+                              hintStyle: Styles.textStyle14,
+                              prefixIcon: IconButton(
+                                  icon: const Icon(Icons.cancel),
+                                  onPressed: () {
+                                    _initializeData();
+                                  }),
+                              suffixIcon: IconButton(
+                                  icon: const Icon(Icons.search),
+                                  onPressed: () {}),
+                            ),
+                            onChanged: (value) {
+                              _filterSearch(value);
+                            },
+                            onSubmitted: (value) {
+                              _filterSearch(value);
+                            },
+                          )),
+                          IconButton(
+                              onPressed: () {
+                                salesItems1 = [];
+                                setState(() {});
+                              },
+                              icon: const Icon(Icons.monetization_on_rounded)),
+                        ],
+                      ),
+                      if (clientSearch == true)
+                        TextField(
+                          controller: nameClient,
+                          decoration: InputDecoration(
+                              hintText: 'ادخل اسم العميل',
+                              hintStyle: Styles.textStyle14,
+                              prefixIcon: IconButton(
+                                  icon: const Icon(Icons.cancel),
+                                  onPressed: () {}),
+                              suffixIcon: IconButton(
+                                  icon: const Icon(Icons.search),
+                                  onPressed: () {})),
+                          onChanged: (value) {
+                            final suggestions = cubit.c.where((e) {
+                              final clientTitle = e.clientName!.toLowerCase();
+                              final input = value.toLowerCase();
+                              return clientTitle.contains(input);
+                            }).toList();
                             setState(() {
-                              clientSearch = !clientSearch;
+                              clientList = suggestions;
                             });
                           },
-                          icon: const Icon(Icons.contact_emergency_rounded)),
-                      Expanded(
-                          child: TextField(
-                        controller: controller,
-                        decoration: InputDecoration(
-                            hintText: 'ادخل اسم المنتج',
-                            hintStyle: Styles.textStyle14,
-                            prefixIcon: IconButton(
-                                icon: const Icon(Icons.cancel),
-                                onPressed: () {
-                                  _initializeData();
-                                }),
-                            suffixIcon: IconButton(
-                                icon: const Icon(Icons.search),
-                                onPressed: () {})),
-                        onChanged: (value) {
-                          _filterSearch(value);
-                        },
-                        onSubmitted: (value) {
-                          _filterSearch(value);
-                        },
-                      )),
-                      IconButton(
-                          onPressed: () {
-                            salesItems1 = [];
-                            setState(() {});
+                          onSubmitted: (value) {
+                            print(clientList);
                           },
-                          icon: const Icon(Icons.monetization_on_rounded)),
+                        ),
                     ],
                   ),
-                  if (clientSearch == true)
-                    TextField(
-                      controller: nameClient,
-                      decoration: InputDecoration(
-                          hintText: 'ادخل اسم العميل',
-                          hintStyle: Styles.textStyle14,
-                          prefixIcon: IconButton(
-                              icon: const Icon(Icons.cancel), onPressed: () {}),
-                          suffixIcon: IconButton(
-                              icon: const Icon(Icons.search),
-                              onPressed: () {})),
-                      onChanged: (value) {
-                        final suggestions = cubit.c.where((e) {
-                          final clientTitle = e.clientName!.toLowerCase();
-                          final input = value.toLowerCase();
-                          return clientTitle.contains(input);
-                        }).toList();
-                        setState(() {
-                          clientList = suggestions;
-                        });
-                      },
-                      onSubmitted: (value) {
-                        print(clientList);
-                      },
-                    )
-                ],
-              ),
-              const ListTile(
-                leading: Text('النتج'),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('السعر'),
-                    Text('التعبئة'),
-                    Text('الكميه'),
-                    Text("الاجمالي"),
-                  ],
                 ),
-              ),
-              Stack(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height - 240,
-                    child: ListView.separated(
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: Text(salesItems1[index].itemName!),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(salesItems1[index].itemPrice.toString()),
-                              Text(salesItems1[index].itemFill.toString()),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    salesItems1[index].itemCountb =
-                                        salesItems1[index].itemCountb! + 1;
-                                  });
-                                },
-                                onLongPress: () {
-                                  setState(() {
-                                    salesItems1[index].itemCountb = 1;
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration:
-                                      BoxDecoration(border: Border.all()),
-                                  child: Text(
-                                      salesItems1[index].itemCountb.toString()),
-                                ),
-                              ),
-                              Text((salesItems1[index].itemPrice! *
-                                      salesItems1[index].itemFill!)
-                                  .toString()),
-                            ],
-                          ),
-                        );
-                      },
-                      itemCount: salesItems1.length,
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 10,
+                SliverToBoxAdapter(
+                  child: Card(
+                    color: Colors.grey[500],
+                    child: ListTile(
+                      leading: Text(
+                        'المنتج',
+                        style: Styles.textStyle14.copyWith(color: Colors.white),
+                      ),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text('السعر',
+                              style: Styles.textStyle14
+                                  .copyWith(color: Colors.white)),
+                          Text('التعبئة',
+                              style: Styles.textStyle14
+                                  .copyWith(color: Colors.white)),
+                          Text('الكميه',
+                              style: Styles.textStyle14
+                                  .copyWith(color: Colors.white)),
+                          Text("الاجمالي",
+                              style: Styles.textStyle14
+                                  .copyWith(color: Colors.white)),
+                        ],
                       ),
                     ),
                   ),
-                  if (clientList.isNotEmpty)
-                    SizedBox(
-                        height: MediaQuery.sizeOf(context).height - 240,
-                        child: ListView.builder(
-                          itemCount: clientList.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              onTap: () {
-                                setState(() {
-                                  nameClient.text =
-                                      clientList[index].clientName!;
-                                  clientList = [];
-                                });
-                                print(nameClient.text);
+                ),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Stack(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.sizeOf(context).height - 240,
+                            child: ListView.separated(
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  child: ListTile(
+                                    leading: Text(salesItems1[index].itemName!,
+                                        style: Styles.textStyle14),
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(salesItems1[index]
+                                            .itemPrice
+                                            .toString()),
+                                        Text(salesItems1[index]
+                                            .itemFill
+                                            .toString()),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              salesItems1[index].itemCountb =
+                                                  salesItems1[index]
+                                                          .itemCountb! +
+                                                      1;
+                                            });
+                                          },
+                                          onLongPress: () {
+                                            setState(() {
+                                              salesItems1[index].itemCountb = 1;
+                                            });
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                                border: Border.all()),
+                                            child: Text(salesItems1[index]
+                                                .itemCountb
+                                                .toString()),
+                                          ),
+                                        ),
+                                        Text((salesItems1[index].itemPrice! *
+                                                salesItems1[index].itemFill!)
+                                            .toString()),
+                                      ],
+                                    ),
+                                  ),
+                                );
                               },
-                              title: Text('${clientList[index].clientName}'),
-                            );
-                          },
-                        )),
-                  if (controller.text.isNotEmpty)
-                    SizedBox(
-                        height: MediaQuery.sizeOf(context).height - 240,
-                        child: ListView.builder(
-                          itemCount: source.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              onTap: () {
-                                salesItems1
-                                    .add(SaleModel.fromJson(source[index]));
-                                setState(() {
-                                  controller.clear();
-                                });
-                              },
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text('${_sourceFiltered[index]['itemName']}'),
-                                  Text(
-                                      '(${_sourceFiltered[index]['itemCount']})'),
-                                ],
+                              itemCount: salesItems1.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                height: 10,
                               ),
-                            );
-                          },
-                        )),
-                ],
-              ),
-            ],
+                            ),
+                          ),
+                          if (clientList.isNotEmpty)
+                            SizedBox(
+                                height: MediaQuery.sizeOf(context).height - 240,
+                                child: Card(
+                                  child: ListView.builder(
+                                    itemCount: clientList.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        onTap: () {
+                                          setState(() {
+                                            nameClient.text =
+                                                clientList[index].clientName!;
+                                            clientList = [];
+                                          });
+                                          print(nameClient.text);
+                                        },
+                                        title: Text(
+                                            '${clientList[index].clientName}'),
+                                      );
+                                    },
+                                  ),
+                                )),
+                          if (controller.text.isNotEmpty)
+                            Card(
+                              child: SizedBox(
+                                  height:
+                                      MediaQuery.sizeOf(context).height - 240,
+                                  child: ListView.builder(
+                                    itemCount: source.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        onTap: () {
+                                          salesItems1.add(SaleModel.fromJson(
+                                              source[index]));
+                                          setState(() {
+                                            controller.clear();
+                                          });
+                                        },
+                                        title: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(
+                                              '${_sourceFiltered[index]['itemName']}',
+                                            ),
+                                            Text(
+                                                '(${_sourceFiltered[index]['itemCount']})'),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  )),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
+          bottomNavigationBar: Card(
+              child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Text('الاجمالي', style: Styles.textStyle18),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Text('0'),
+                  ),
+                ),
+                Text('ع.ق', style: Styles.textStyle18),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Text('0'),
+                  ),
+                ),
+              ],
+            ),
+          )),
         );
       },
     );
