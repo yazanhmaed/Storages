@@ -18,3 +18,8 @@ class InsertDatabaseState extends MicroStates {}
 class DeleteDatabaseState extends MicroStates {}
 class UpdataDatabaseState extends MicroStates {}
 class UpdataDatabaseErrorState extends MicroStates {}
+class CalculateTotalCostState extends MicroStates {}
+class CalculateTotalCountState extends MicroStates {}
+class ChangeCountState extends MicroStates {}
+class RemoveState extends MicroStates {}
+class ItemDiscountState extends MicroStates {}

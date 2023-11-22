@@ -206,5 +206,53 @@ class MicroCubit extends Cubit<MicroStates> {
         }));
   }
 
+  void changeCount({required List<SaleModel> list, required int index}) {
+    list[index].itemCountb = list[index].itemCountb! + 1;
 
+    //  totalCost;
+    emit(ChangeCountState());
+  }
+
+  void removeItem({required List<SaleModel> list, required int index}) {
+    list.removeWhere((element) => element.itemNumber == index);
+
+    emit(RemoveState());
+  }
+
+  int changeCountSheet({required int index}) {
+    emit(ChangeCountState());
+    return index;
+
+    //  totalCost;
+  }
+
+  int itemDiscountSheet({required int index}) {
+    emit(ItemDiscountState());
+    return index;
+
+    //  totalCost;
+  }
+
+  int totalCount = 0;
+  int calculateTotalCount({required List<SaleModel> list}) {
+    totalCount = 0;
+    for (var index = 0; index < list.length; index++) {
+      totalCount += list[index].itemCountb!;
+    }
+
+    emit(CalculateTotalCountState());
+    return totalCount;
+  }
+
+  double totalCost = 0;
+  double calculateTotalCost({required List<SaleModel> salesItems1}) {
+    totalCost = 0;
+    for (var index = 0; index < salesItems1.length; index++) {
+      totalCost += (salesItems1[index].itemCountb! *
+          salesItems1[index].itemFill! *
+          salesItems1[index].itemPrice!);
+    }
+    emit(CalculateTotalCostState());
+    return totalCost;
+  }
 }

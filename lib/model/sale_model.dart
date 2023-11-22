@@ -7,7 +7,6 @@ class SaleModel {
   int? itemCount;
   int? itemCountb;
   int? itemCostb;
-  
 
   SaleModel({
     this.itemNumber,
@@ -42,6 +41,4 @@ class SaleModel {
       'itemCostb': itemCostb,
     };
   }
-
-
 }

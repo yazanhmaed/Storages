@@ -68,7 +68,7 @@ class EditProductScreen extends StatelessWidget {
                           ),
                           CustomTextField(
                             readOnly: true,
-                            height: '',
+                            label: '',
                             controller: itemId,
                             keyboardType: TextInputType.number,
                           ),
@@ -77,7 +77,7 @@ class EditProductScreen extends StatelessWidget {
                             style: Styles.textStyle14,
                           ),
                           CustomTextField(
-                            height: '',
+                            label: '',
                             controller: itemName,
                             keyboardType: TextInputType.name,
                             validate: (value) {
@@ -120,7 +120,7 @@ class EditProductScreen extends StatelessWidget {
                                         style: Styles.textStyle14,
                                       ),
                                       CustomTextField(
-                                        height: '',
+                                        label: '',
                                         hintText: '0.0',
                                         controller: itemPrice,
                                         keyboardType: TextInputType.number,
@@ -143,7 +143,7 @@ class EditProductScreen extends StatelessWidget {
                                         style: Styles.textStyle14,
                                       ),
                                       CustomTextField(
-                                        height: '',
+                                        label: '',
                                         controller: itemCost,
                                         keyboardType: TextInputType.number,
                                         // validate: (value) {
@@ -164,7 +164,7 @@ class EditProductScreen extends StatelessWidget {
                                         style: Styles.textStyle14,
                                       ),
                                       CustomTextField(
-                                        height: '',
+                                        label: '',
                                         hintText: '0.0',
                                         controller: itemFill,
                                         keyboardType: TextInputType.number,
@@ -186,7 +186,7 @@ class EditProductScreen extends StatelessWidget {
                             style: Styles.textStyle14,
                           ),
                           CustomTextField(
-                            height: '',
+                            label: '',
                             hintText: '0',
                             controller: itemCountr,
                             keyboardType: TextInputType.number,

@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/model/client_model.dart';
 import 'package:storage/model/sale_model.dart';
 import 'package:storage/resources/styles.dart';
+import 'package:storage/resources/widgets/bottom_sheet.dart';
+import 'package:storage/resources/widgets/bottom_sheet_sale.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 
@@ -33,16 +36,6 @@ class _SalesState extends State<SalesScreen> {
   TextEditingController nameClient = TextEditingController();
   bool clientSearch = false;
   List<SaleModel> salesItems1 = [];
-
-  double calculateTotalCost() {
-    double totalCost = 0;
-
-    for (var index = 0; index < salesItems1.length; index++) {
-      totalCost += salesItems1[index].itemCostb ?? 0;
-    }
-
-    return totalCost;
-  }
 
   _filterSearch(value) {
     setState(() => isLoading = true);
@@ -215,9 +208,9 @@ class _SalesState extends State<SalesScreen> {
                           Text('السعر',
                               style: Styles.textStyle14
                                   .copyWith(color: Colors.white)),
-                          Text('التعبئة',
-                              style: Styles.textStyle14
-                                  .copyWith(color: Colors.white)),
+                          // Text('التعبئة',
+                          //     style: Styles.textStyle14
+                          //         .copyWith(color: Colors.white)),
                           Text('الكميه',
                               style: Styles.textStyle14
                                   .copyWith(color: Colors.white)),
@@ -240,6 +233,24 @@ class _SalesState extends State<SalesScreen> {
                               itemBuilder: (context, index) {
                                 return Card(
                                   child: ListTile(
+                                    onTap: () {
+                                      showFlexibleBottomSheet(
+                                        minHeight: 0,
+                                        initHeight: 0.9,
+                                        maxHeight: 0.9,
+                                        context: context,
+                                        builder: (context, scrollController,
+                                                bottomSheetOffset) =>
+                                            InfoSaleScreen(
+                                          list: salesItems1,
+                                          scrollController: scrollController,
+                                          cubit: cubit,
+                                          data: salesItems1[index],
+                                          delete: () {},
+                                        ),
+                                        isExpand: false,
+                                      );
+                                    },
                                     leading: Text(salesItems1[index].itemName!,
                                         style: Styles.textStyle14),
                                     title: Row(
@@ -249,23 +260,30 @@ class _SalesState extends State<SalesScreen> {
                                         Text(salesItems1[index]
                                             .itemPrice
                                             .toString()),
-                                        Text(salesItems1[index]
-                                            .itemFill
-                                            .toString()),
-                                        GestureDetector(
+                                        // Text(salesItems1[index]
+                                        //     .itemFill
+                                        //     .toString()),
+                                        InkWell(
                                           onTap: () {
-                                            setState(() {
-                                              salesItems1[index].itemCountb =
-                                                  salesItems1[index]
-                                                          .itemCountb! +
-                                                      1;
-                                            });
+                                            cubit.changeCount(
+                                                index: index,
+                                                list: salesItems1);
+
+                                            cubit.calculateTotalCount(
+                                                list: salesItems1);
+                                            print(salesItems1[index].itemCostb);
+                                            cubit.calculateTotalCost(
+                                                salesItems1: salesItems1);
                                           },
                                           onLongPress: () {
                                             setState(() {
                                               salesItems1[index].itemCountb = 1;
                                             });
-                                            total = calculateTotalCost();
+
+                                            cubit.calculateTotalCount(
+                                                list: salesItems1);
+                                            cubit.calculateTotalCost(
+                                                salesItems1: salesItems1);
                                           },
                                           child: Container(
                                             padding: const EdgeInsets.all(5),
@@ -276,10 +294,9 @@ class _SalesState extends State<SalesScreen> {
                                                 .toString()),
                                           ),
                                         ),
-                                        Text((salesItems1[index].itemCostb =
+                                        Text((salesItems1[index].itemFill! *
                                                 salesItems1[index].itemPrice! *
-                                                    salesItems1[index]
-                                                        .itemCountb!)
+                                                salesItems1[index].itemCountb!)
                                             .toString()),
                                       ],
                                     ),
@@ -325,13 +342,30 @@ class _SalesState extends State<SalesScreen> {
                                     itemBuilder: (context, index) {
                                       return ListTile(
                                         onTap: () {
-                                          total = calculateTotalCost();
-                                          salesItems1.add(SaleModel.fromJson(
-                                              source[index]));
+                                          if (salesItems1.any((element) =>
+                                              element.itemNumber ==
+                                              source[index]['itemNumber'])) {
+                                            cubit.changeCount(
+                                                index: salesItems1.indexWhere(
+                                                  (element) =>
+                                                      element.itemNumber ==
+                                                      source[index]
+                                                          ['itemNumber'],
+                                                ),
+                                                list: salesItems1);
+                                          } else {
+                                            salesItems1.add(SaleModel.fromJson(
+                                                source[index]));
+                                          }
+
                                           setState(() {
                                             controller.clear();
                                           });
-                                          total = calculateTotalCost();
+                                          cubit.calculateTotalCount(
+                                              list: salesItems1);
+                                          print(salesItems1[index].itemCostb);
+                                          cubit.calculateTotalCost(
+                                              salesItems1: salesItems1);
                                         },
                                         title: Row(
                                           mainAxisAlignment:
@@ -366,18 +400,18 @@ class _SalesState extends State<SalesScreen> {
                     width: 10,
                   ),
                   Expanded(
-                    child: Container(
-                      child: Text('${calculateTotalCost()}'),
-                    ),
+                    child: salesItems1.isEmpty
+                        ? Text('0.0')
+                        : Text('${cubit.totalCost}'),
                   ),
-                  Text('ع.ق', style: Styles.textStyle18),
+                  Text('الكمية', style: Styles.textStyle18),
                   SizedBox(
                     width: 10,
                   ),
                   Expanded(
-                    child: Container(
-                      child: Text('0'),
-                    ),
+                    child: salesItems1.isEmpty
+                        ? Text('0')
+                        : Text('${cubit.totalCount}'),
                   ),
                 ],
               ),

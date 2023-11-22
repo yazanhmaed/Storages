@@ -2,6 +2,7 @@
 
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
+import 'package:storage/model/sale_model.dart';
 import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
@@ -11,24 +12,27 @@ import 'package:storage/screens/inventory/edit_item_screen.dart';
 
 import '../../../resources/color_manager.dart';
 
-class InfoScreen extends StatefulWidget {
-  const InfoScreen({
+class InfoSaleScreen extends StatefulWidget {
+  const InfoSaleScreen({
     super.key,
     required this.scrollController,
     required this.data,
     this.delete,
     required this.cubit,
+    required this.list,
   });
   final ScrollController scrollController;
-  final Map<String, dynamic> data;
+  final SaleModel data;
   final Function()? delete;
   final MicroCubit cubit;
+  final List<SaleModel> list;
 
   @override
-  State<InfoScreen> createState() => _InfoScreenState();
+  State<InfoSaleScreen> createState() => _InfoScreenState();
 }
 
-class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
+class _InfoScreenState extends State<InfoSaleScreen>
+    with TickerProviderStateMixin {
   final double infoHeight = 364.0;
   double opacity1 = 0.0;
   double opacity2 = 0.0;
@@ -78,6 +82,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final TextEditingController itemCountr = TextEditingController();
+    final TextEditingController itemDiscount = TextEditingController();
 
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width / 1.2) +
@@ -137,7 +142,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                                 color: Colors.green,
                               ),
                               color: Colors.green.shade200),
-                          child: Text('${widget.data['itemName']}',
+                          child: Text('${widget.data.itemName}',
                               style: Styles.textStyle18),
                         ),
                       ],
@@ -152,7 +157,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(width: 2, color: Colors.green),
                               color: Colors.green.shade200),
-                          child: Text('${widget.data['itemCount']}',
+                          child: Text('${widget.data.itemCount}',
                               style: Styles.textStyle18),
                         ),
                       ],
@@ -167,7 +172,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(width: 2, color: Colors.green),
                               color: Colors.green.shade200),
-                          child: Text('${widget.data['itemPrice']}',
+                          child: Text('${widget.data.itemPrice}',
                               style: Styles.textStyle18),
                         ),
                       ],
@@ -182,7 +187,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(width: 2, color: Colors.green),
                               color: Colors.green.shade200),
-                          child: Text('${widget.data['itemCost']}',
+                          child: Text('${widget.data.itemCost}',
                               style: Styles.textStyle18),
                         ),
                       ],
@@ -197,7 +202,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(width: 2, color: Colors.green),
                               color: Colors.green.shade200),
-                          child: Text('${widget.data['itemFill']}',
+                          child: Text('${widget.data.itemFill}',
                               style: Styles.textStyle18),
                         ),
                       ],
@@ -241,12 +246,12 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                               padding: const EdgeInsets.only(top: 20),
                               child: Row(
                                 children: [
-                                  Text('اضافة كمية للمخزون',
+                                  Text(' كمية المطلوبة',
                                       style: Styles.textStyle20),
                                   Expanded(
                                     child: CustomTextField(
                                       label: '',
-                                      hintText: '0',
+                                      hintText: '${widget.data.itemCountb}',
                                       controller: itemCountr,
                                       keyboardType: TextInputType.number,
                                       validate: (value) {
@@ -259,13 +264,52 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                                   ),
                                   FloatingActionButton(
                                     onPressed: () {
-                                      widget.cubit.plusCount(
-                                          count:
-                                              (int.tryParse(itemCountr.text)!) +
-                                                  int.tryParse(widget
-                                                      .data['itemCount']
-                                                      .toString())!,
-                                          number: widget.data['itemNumber']);
+                                      widget.data.itemCountb = widget.cubit
+                                          .changeCountSheet(
+                                              index: int.tryParse(
+                                                  itemCountr.text)!);
+                                      widget.cubit.calculateTotalCount(
+                                          list: widget.list);
+                                      widget.cubit.calculateTotalCost(
+                                          salesItems1: widget.list);
+                                      // itemCountr.clear();
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop();
+                                    },
+                                    child: const Icon(Icons.add),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Row(
+                                children: [
+                                  Text(' أضافة خصم', style: Styles.textStyle20),
+                                  Expanded(
+                                    child: CustomTextField(
+                                      label: '',
+                                      hintText: '${widget.data.itemPrice}',
+                                      controller: itemDiscount,
+                                      keyboardType: TextInputType.number,
+                                      validate: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'النص مطلوب';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  FloatingActionButton(
+                                    onPressed: () {
+                                      widget.data.itemPrice = widget.cubit
+                                          .itemDiscountSheet(
+                                              index: int.tryParse(
+                                                  itemDiscount.text)!);
+                                      widget.cubit.calculateTotalCount(
+                                          list: widget.list);
+                                      widget.cubit.calculateTotalCost(
+                                          salesItems1: widget.list);
                                       // itemCountr.clear();
                                       Navigator.of(context, rootNavigator: true)
                                           .pop();
@@ -285,56 +329,23 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text('حذف المنتج ',
+                                    const Text('  حذف المنتج من القائمة ',
                                         textAlign: TextAlign.left,
                                         style: Styles.textStyle20),
                                     FloatingActionButton(
                                       onPressed: () {
-                                        widget.cubit
-                                            .delete(widget.data['itemNumber'])
-                                            .then((value) {
-                                          // navigateAndFinish(context, DataPage(currentPerPage: cubit.i.length));
-                                        });
+                                        widget.cubit.removeItem(
+                                            list: widget.list,
+                                            index: widget.data.itemNumber!);
+                                        widget.cubit.calculateTotalCount(
+                                            list: widget.list);
+                                        widget.cubit.calculateTotalCost(
+                                            salesItems1: widget.list);
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
                                       },
                                       child: const Icon(Icons.delete),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Divider(color: ColorManager.primary, thickness: 2),
-                            AnimatedOpacity(
-                              duration: const Duration(milliseconds: 500),
-                              opacity: opacity1,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text('تعديل بيانات المنتج ',
-                                        textAlign: TextAlign.left,
-                                        style: Styles.textStyle20),
-                                    FloatingActionButton(
-                                      onPressed: () {
-                                        navigateTo(
-                                            context,
-                                            EditProductScreen(
-                                              valueId:
-                                                  widget.data['itemNumber'],
-                                              valueName:
-                                                  widget.data['itemName'],
-                                              valueCost:
-                                                  widget.data['itemCost'],
-                                              valueCountr:
-                                                  widget.data['itemCount'],
-                                              valueFill:
-                                                  widget.data['itemFill'],
-                                              valuePrice:
-                                                  widget.data['itemPrice'],
-                                            ));
-                                      },
-                                      child: const Icon(Icons.edit_document),
                                     )
                                   ],
                                 ),

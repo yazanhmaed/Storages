@@ -71,7 +71,7 @@ class AddClientScreen extends StatelessWidget {
                                       style: Styles.textStyle14,
                                     ),
                                     CustomTextField(
-                                      height: '',
+                                      label: '',
                                       controller: clientName,
                                       keyboardType: TextInputType.text,
                                       validate: (value) {
@@ -98,7 +98,7 @@ class AddClientScreen extends StatelessWidget {
                                       style: Styles.textStyle14,
                                     ),
                                     CustomTextField(
-                                      height: '',
+                                      label: '',
                                       controller: clientPhone,
                                       keyboardType: TextInputType.number,
                                       validate: (value) {
@@ -125,7 +125,7 @@ class AddClientScreen extends StatelessWidget {
                           ),
                           CustomTextField(
                             vertical: 130,
-                            height: '',
+                            label: '',
                             hintText: '0',
                             controller: clientNote,
                             keyboardType: TextInputType.text,

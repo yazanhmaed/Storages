@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
-    required this.height,
+    required this.label,
     this.maxLines = 1,
     this.onSaved,
     required this.controller,
@@ -25,7 +25,7 @@ class CustomTextField extends StatelessWidget {
   final FormFieldValidator<String>? validate;
   final double vertical;
   final bool obscureText;
-  final String height;
+  final String label;
   final String? errorText;
   final String? hintText;
   final Function()? onTap;
@@ -67,7 +67,7 @@ class CustomTextField extends StatelessWidget {
             prefixIconColor: Colors.amber,
             suffixIcon: suffixIcon,
             hintText: hintText,
-            label: Text(height),
+            label: Text(label),
             hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
             disabledBorder:
                 buildBorder(Theme.of(context).colorScheme.onPrimary),
