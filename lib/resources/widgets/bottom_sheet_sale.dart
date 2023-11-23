@@ -3,24 +3,22 @@
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/model/sale_model.dart';
-import 'package:storage/resources/components.dart';
+import 'package:storage/resources/color_manager.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/inventory/edit_item_screen.dart';
-
-import '../../../resources/color_manager.dart';
 
 class InfoSaleScreen extends StatefulWidget {
   const InfoSaleScreen({
-    super.key,
+    Key? key,
     required this.scrollController,
     required this.data,
     this.delete,
     required this.cubit,
     required this.list,
-  });
+  }) : super(key: key);
+
   final ScrollController scrollController;
   final SaleModel data;
   final Function()? delete;
@@ -40,6 +38,7 @@ class _InfoScreenState extends State<InfoSaleScreen>
 
   late final AnimationController animationController;
   late final Animation<double> animation;
+
   @override
   void initState() {
     super.initState();
@@ -87,128 +86,40 @@ class _InfoScreenState extends State<InfoSaleScreen>
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width / 1.2) +
         24.0;
+
     return BlocConsumer<MicroCubit, MicroStates>(
       listener: (context, state) {},
       builder: (context, state) {
         return Material(
           child: Stack(
             children: <Widget>[
-              // Column(
-              //   children: <Widget>[
-              //     AspectRatio(
-              //       aspectRatio: 1.2,
-              //       child: GestureDetector(
-              //         onTap: () async {
-              //           await showDialog(
-              //               context: context,
-              //               builder: (_) => Dialog(
-              //                     child: Stack(
-              //                       alignment: Alignment.topRight,
-              //                       children: [
-              //                         IconButton(
-              //                             onPressed: () {
-              //                               Navigator.pop(context);
-              //                             },
-              //                             icon: const Text(
-              //                               'X',
-              //                               style: TextStyle(
-              //                                   color: Colors.red,
-              //                                   fontSize: 30,
-              //                                   fontWeight: FontWeight.bold),
-              //                             )),
-              //                       ],
-              //                     ),
-              //                   ));
-              //         },
-              //       ),
-              //     ),
-              //   ],
-              // ),
               Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                padding: const EdgeInsets.only(top: 30, right: 10, left: 10),
+                child: Column(
                   children: [
-                    Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('أسم المنتج', style: Styles.textStyle18),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                width: 2,
-                                color: Colors.green,
-                              ),
-                              color: Colors.green.shade200),
-                          child: Text('${widget.data.itemName}',
-                              style: Styles.textStyle18),
-                        ),
+                        buildInfoColumn(
+                            'أسم المنتج', '${widget.data.itemName}'),
+                        buildInfoColumn('الكمية', '${widget.data.itemCount}'),
                       ],
                     ),
-                    Column(
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('الكمية', style: Styles.textStyle18),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green),
-                              color: Colors.green.shade200),
-                          child: Text('${widget.data.itemCount}',
-                              style: Styles.textStyle18),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text('سعر البيع', style: Styles.textStyle18),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green),
-                              color: Colors.green.shade200),
-                          child: Text('${widget.data.itemPrice}',
-                              style: Styles.textStyle18),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text('التكلفة', style: Styles.textStyle18),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green),
-                              color: Colors.green.shade200),
-                          child: Text('${widget.data.itemCost}',
-                              style: Styles.textStyle18),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text('التعبئة', style: Styles.textStyle18),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green),
-                              color: Colors.green.shade200),
-                          child: Text('${widget.data.itemFill}',
-                              style: Styles.textStyle18),
-                        ),
+                        buildInfoColumn(
+                            'سعر البيع', '${widget.data.itemPrice}'),
+                        buildInfoColumn('التكلفة', '${widget.data.itemCost}'),
+                        buildInfoColumn('التعبئة', '${widget.data.itemFill}'),
                       ],
                     ),
                   ],
                 ),
+              ),
+              SizedBox(
+                height: 80,
               ),
               Positioned(
                 top: (MediaQuery.of(context).size.width / 1.8),
@@ -223,9 +134,10 @@ class _InfoScreenState extends State<InfoSaleScreen>
                         topRight: Radius.circular(32.0)),
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                          color: ColorManager.grey.withOpacity(0.2),
-                          offset: const Offset(1.1, 1.1),
-                          blurRadius: 10.0),
+                        color: ColorManager.grey.withOpacity(0.2),
+                        offset: const Offset(1.1, 1.1),
+                        blurRadius: 10.0,
+                      ),
                     ],
                   ),
                   child: Padding(
@@ -272,7 +184,6 @@ class _InfoScreenState extends State<InfoSaleScreen>
                                           list: widget.list);
                                       widget.cubit.calculateTotalCost(
                                           salesItems1: widget.list);
-                                      // itemCountr.clear();
                                       Navigator.of(context, rootNavigator: true)
                                           .pop();
                                     },
@@ -310,7 +221,6 @@ class _InfoScreenState extends State<InfoSaleScreen>
                                           list: widget.list);
                                       widget.cubit.calculateTotalCost(
                                           salesItems1: widget.list);
-                                      // itemCountr.clear();
                                       Navigator.of(context, rootNavigator: true)
                                           .pop();
                                     },
@@ -361,17 +271,19 @@ class _InfoScreenState extends State<InfoSaleScreen>
                   ),
                 ),
               ),
-              //icon button close
               Positioned(
                 top: (MediaQuery.of(context).size.width / 2.1),
                 right: 35,
                 child: ScaleTransition(
                   scale: CurvedAnimation(
-                      parent: animationController, curve: Curves.fastOutSlowIn),
+                    parent: animationController,
+                    curve: Curves.fastOutSlowIn,
+                  ),
                   child: Card(
                     color: ColorManager.primary,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0)),
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
                     elevation: 10.0,
                     child: SizedBox(
                       width: 60,
@@ -402,6 +314,37 @@ class _InfoScreenState extends State<InfoSaleScreen>
           ),
         );
       },
+    );
+  }
+
+  Widget buildInfoColumn(String title, String value) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: Styles.textStyle18.copyWith(
+            fontSize: MediaQuery.of(context).size.width * 0.04,
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          margin: EdgeInsets.symmetric(vertical: 15),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              width: 2,
+              color: Colors.grey,
+            ),
+            color: Colors.grey.shade200,
+          ),
+          child: Text(
+            value,
+            style: Styles.textStyle18.copyWith(
+              fontSize: MediaQuery.of(context).size.width * 0.04,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

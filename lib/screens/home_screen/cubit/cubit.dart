@@ -207,9 +207,10 @@ class MicroCubit extends Cubit<MicroStates> {
   }
 
   void changeCount({required List<SaleModel> list, required int index}) {
-    list[index].itemCountb = list[index].itemCountb! + 1;
+    if (list[index].itemCount! > list[index].itemCountb!) {
+      list[index].itemCountb = list[index].itemCountb! + 1;
+    }
 
-    //  totalCost;
     emit(ChangeCountState());
   }
 

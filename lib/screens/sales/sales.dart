@@ -28,7 +28,6 @@ class _SalesState extends State<SalesScreen> {
   List<Map<String, dynamic>> source = [];
   // ignore: unused_field
   final String _selectableKey = "itemNumber";
-  late double total = 0.0;
 
   bool isLoading = true;
   List<ClientModel> clientList = [];
@@ -198,25 +197,44 @@ class _SalesState extends State<SalesScreen> {
                   child: Card(
                     color: Colors.grey[500],
                     child: ListTile(
-                      leading: Text(
-                        'المنتج',
-                        style: Styles.textStyle14.copyWith(color: Colors.white),
+                      leading: Container(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: Text(
+                          'المنتج',
+                          style:
+                              Styles.textStyle14.copyWith(color: Colors.white),
+                        ),
                       ),
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text('السعر',
-                              style: Styles.textStyle14
-                                  .copyWith(color: Colors.white)),
+                          Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Text('السعر',
+                                  style: Styles.textStyle14
+                                      .copyWith(color: Colors.white)),
+                            ),
+                          ),
                           // Text('التعبئة',
                           //     style: Styles.textStyle14
                           //         .copyWith(color: Colors.white)),
-                          Text('الكميه',
-                              style: Styles.textStyle14
-                                  .copyWith(color: Colors.white)),
-                          Text("الاجمالي",
-                              style: Styles.textStyle14
-                                  .copyWith(color: Colors.white)),
+                          Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Text('الكميه',
+                                  style: Styles.textStyle14
+                                      .copyWith(color: Colors.white)),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Text("الاجمالي",
+                                  style: Styles.textStyle14
+                                      .copyWith(color: Colors.white)),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -251,53 +269,84 @@ class _SalesState extends State<SalesScreen> {
                                         isExpand: false,
                                       );
                                     },
-                                    leading: Text(salesItems1[index].itemName!,
-                                        style: Styles.textStyle14),
+                                    leading: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.2,
+                                      child: Text(salesItems1[index].itemName!,
+                                          style: Styles.textStyle14),
+                                    ),
                                     title: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
-                                        Text(salesItems1[index]
-                                            .itemPrice
-                                            .toString()),
-                                        // Text(salesItems1[index]
-                                        //     .itemFill
-                                        //     .toString()),
-                                        InkWell(
-                                          onTap: () {
-                                            cubit.changeCount(
-                                                index: index,
-                                                list: salesItems1);
-
-                                            cubit.calculateTotalCount(
-                                                list: salesItems1);
-                                            print(salesItems1[index].itemCostb);
-                                            cubit.calculateTotalCost(
-                                                salesItems1: salesItems1);
-                                          },
-                                          onLongPress: () {
-                                            setState(() {
-                                              salesItems1[index].itemCountb = 1;
-                                            });
-
-                                            cubit.calculateTotalCount(
-                                                list: salesItems1);
-                                            cubit.calculateTotalCost(
-                                                salesItems1: salesItems1);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.all(5),
-                                            decoration: BoxDecoration(
-                                                border: Border.all()),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Center(
                                             child: Text(salesItems1[index]
-                                                .itemCountb
+                                                .itemPrice
                                                 .toString()),
                                           ),
                                         ),
-                                        Text((salesItems1[index].itemFill! *
-                                                salesItems1[index].itemPrice! *
-                                                salesItems1[index].itemCountb!)
-                                            .toString()),
+                                        // Text(salesItems1[index]
+                                        //     .itemFill
+                                        //     .toString()),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Center(
+                                            child: InkWell(
+                                              onTap: () {
+                                                cubit.changeCount(
+                                                    index: index,
+                                                    list: salesItems1);
+
+                                                cubit.calculateTotalCount(
+                                                    list: salesItems1);
+                                                print(salesItems1[index]
+                                                    .itemCostb);
+                                                cubit.calculateTotalCost(
+                                                    salesItems1: salesItems1);
+                                              },
+                                              onLongPress: () {
+                                                setState(() {
+                                                  salesItems1[index]
+                                                      .itemCountb = 1;
+                                                });
+
+                                                cubit.calculateTotalCount(
+                                                    list: salesItems1);
+                                                cubit.calculateTotalCost(
+                                                    salesItems1: salesItems1);
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(),
+                                                    color: salesItems1[index]
+                                                                .itemCount! ==
+                                                            salesItems1[index]
+                                                                .itemCountb!
+                                                        ? Colors.red
+                                                        : null),
+                                                child: Text(salesItems1[index]
+                                                    .itemCountb
+                                                    .toString()),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Center(
+                                            child: Text(
+                                                (salesItems1[index].itemFill! *
+                                                        salesItems1[index]
+                                                            .itemPrice! *
+                                                        salesItems1[index]
+                                                            .itemCountb!)
+                                                    .toString()),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -422,3 +471,26 @@ class _SalesState extends State<SalesScreen> {
     );
   }
 }
+ Widget buildInfoColumn(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 5),
+        Text(
+          value,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
+      ],
+    );
+  }
