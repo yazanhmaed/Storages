@@ -42,7 +42,7 @@ class MicroCubit extends Cubit<MicroStates> {
 
         await database
             .execute(
-          'CREATE TABLE clients(clientId INTEGER PRIMARY KEY ,clientName TEXT,clientNOTE TEXT,clientPhone INTEGER)',
+          'CREATE TABLE clients(clientId INTEGER PRIMARY KEY ,clientName TEXT,clientNOTE TEXT,clientPhone INTEGER,onHim REAL, forHim REAL)',
         )
             .then((_) {
           print('Clients table created');
@@ -74,7 +74,7 @@ class MicroCubit extends Cubit<MicroStates> {
     itemFill ??= 0;
     itemCount ??= 0;
 
-    await dataBase.transaction((txn) => txn
+    dataBase.transaction((txn) => txn
             .rawInsert(
                 'INSERT INTO items(itemNumber,itemName,itemPrice,itemCost,itemFill,itemCount) VALUES("$itemNumber","$itemName","$itemPrice","$itemCost","$itemFill","$itemCount")')
             .then((value) {
@@ -180,6 +180,17 @@ class MicroCubit extends Cubit<MicroStates> {
       emit(UpdataDatabaseErrorState());
     });
   }
+
+  Future updateClient({required ClientModel clients}) async {
+    await dataBase.update('clients', clients.toMap(),
+        where: 'clientName = ?', whereArgs: [clients.clientName]).then((value) {
+      getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
+      emit(UpdataDatabaseState());
+    }).catchError((onError) {
+      print(onError);
+      emit(UpdataDatabaseErrorState());
+    });
+  }
   // static Future<int> deleteAll() async {
   //   print('delete All');
   //   return await _db!
@@ -191,12 +202,16 @@ class MicroCubit extends Cubit<MicroStates> {
     required String clientName,
     required String clientPhone,
     String? clientNOTE,
+    double? onHim,
+    double? forHim,
   }) async {
     clientNOTE ??= "";
+    onHim ??= 0.0;
+    forHim ??= 0.0;
 
     await dataBase.transaction((txn) => txn
             .rawInsert(
-                'INSERT INTO clients(clientName,clientPhone,clientNOTE) VALUES("$clientName","$clientPhone","$clientNOTE")')
+                'INSERT INTO clients(clientName,clientPhone,clientNOTE, onHim, forHim) VALUES("$clientName","$clientPhone","$clientNOTE", 0.0, 0.0)')
             .then((value) {
           print('$value inserted successfuly');
           getDataFromDatabase(dataBase, dataClients: true, dataItems: false);
@@ -255,5 +270,11 @@ class MicroCubit extends Cubit<MicroStates> {
     }
     emit(CalculateTotalCostState());
     return totalCost;
+  }
+
+  bool isForHim = true;
+  void getHim({required bool isFor}) {
+    isForHim = isFor;
+    emit(GetHim());
   }
 }

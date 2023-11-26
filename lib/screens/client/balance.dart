@@ -1,30 +1,34 @@
 // ignore_for_file: library_private_types_in_public_api, unused_element, avoid_print, avoid_unnecessary_containers, prefer_const_constructors
 
 import 'dart:math';
-
+import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
-
+import 'package:storage/model/client_model.dart';
+import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
-
+import 'package:storage/resources/widgets/bottom_sheet.dart';
+import 'package:storage/resources/widgets/custom_text_field.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-
+import 'package:storage/screens/inventory/inventory_screen.dart';
 import 'package:storage/screens/pdf/availble_products.dart';
+import 'package:storage/screens/pdf/barcode.dart';
 import 'package:storage/screens/pdf/file_handle_api.dart';
 
 // ignore: must_be_immutable
-class ClientShowScreen extends StatefulWidget {
-  ClientShowScreen({Key? key, required this.currentPerPage}) : super(key: key);
+class BalanceScreen extends StatefulWidget {
+  BalanceScreen({Key? key, required this.currentPerPage}) : super(key: key);
   int currentPerPage;
   @override
-  _ClientShowScreenState createState() => _ClientShowScreenState();
+  _BalanceScreenState createState() => _BalanceScreenState();
 }
 
-class _ClientShowScreenState extends State<ClientShowScreen> {
+class _BalanceScreenState extends State<BalanceScreen> {
   late List<DatatableHeader> _headers;
-
+  final TextEditingController forHim = TextEditingController();
+  final TextEditingController onHim = TextEditingController();
   int _total = 100;
   List<bool>? _expanded;
   String? _searchKey = "clientName";
@@ -36,6 +40,7 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
   // ignore: unused_field
   final String _selectableKey = "clienNumber";
   bool b = false;
+
   String? _sortColumn;
   bool _sortAscending = true;
   bool _isLoading = true;
@@ -49,6 +54,8 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
         'clientNote': data.clientNote,
         'clientPhone': data.clientPhone,
         'clientId': data.clientId,
+        'onHim': data.onHim,
+        'forHim': data.onHim,
       });
     }
 
@@ -125,12 +132,6 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
     /// set headers
     _headers = [
       DatatableHeader(
-          text: "",
-          value: "clientId",
-          show: true,
-          sortable: true,
-          textAlign: TextAlign.center),
-      DatatableHeader(
           text: "أسم العميل",
           value: "clientName",
           show: true,
@@ -138,8 +139,15 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
           sortable: true,
           textAlign: TextAlign.center),
       DatatableHeader(
-          text: "رقم الهاتف",
-          value: "clientPhone",
+          text: "له",
+          value: "forHim",
+          show: true,
+          flex: 1,
+          sortable: true,
+          textAlign: TextAlign.center),
+      DatatableHeader(
+          text: "عليه",
+          value: "onHim",
           show: true,
           flex: 1,
           sortable: true,
@@ -173,10 +181,10 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
           _initializeData();
         }
         if (state is DeleteDatabaseState) {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context, rootNavigator: true).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
-                return ClientShowScreen(currentPerPage: widget.currentPerPage);
+                return BalanceScreen(currentPerPage: widget.currentPerPage);
               },
             ),
           );
@@ -184,11 +192,11 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
       },
       builder: (context, state) {
         var cubit = MicroCubit.get(context);
-        print(cubit.cl.length);
+        print(cubit.items.length);
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              "العملاء",
+              "الارصدة الافتتاحيه للعملاء",
               style: Styles.textStyle25.copyWith(color: Colors.white),
             ),
             actions: [
@@ -197,6 +205,11 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
                 icon: const Icon(Icons.refresh_sharp),
               ),
             ],
+            leading: IconButton(
+                onPressed: () {
+                  navigateAndFinish(context, InventoryScreen());
+                },
+                icon: Icon(Icons.arrow_back_ios)),
           ),
           // drawer: Drawer(
           //   child: ListView(
@@ -237,28 +250,56 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
                       shadowColor: Colors.black,
                       clipBehavior: Clip.none,
                       child: ResponsiveDatatable(
-                        title: TextButton.icon(
-                          onPressed: () async {
-                            // generate pdf file
-                            if (_selecteds.isEmpty) {
-                              final pdfFile =
-                                  await PdfAvailableProducts.client(
+                        hideUnderline: false,
+                        title: Row(
+                          children: [
+                            TextButton.icon(
+                              onPressed: () async {
+                                // generate pdf file
+                                if (_selecteds.isEmpty) {
+                                  final pdfFile =
+                                      await PdfAvailableProducts.generate(
+                                          sourceOriginal
+                                              .map((map) => map.values.toList())
+                                              .toList());
+                                  FileHandleApi.openFile(pdfFile);
+                                } else {
+                                  final pdfFile =
+                                      await PdfAvailableProducts.generate(
+                                          _selecteds
+                                              .map((map) => map.values.toList())
+                                              .toList());
+                                  FileHandleApi.openFile(pdfFile);
+                                }
+
+                                // opening the pdf file
+                              },
+                              icon: const Icon(Icons.receipt_long_rounded),
+                              label: const Text("تقرير"),
+                            ),
+                            TextButton.icon(
+                              onPressed: () async {
+                                // generate pdf file
+                                if (_selecteds.isEmpty) {
+                                  final pdfFile = await PdfBarcode.generate(
                                       sourceOriginal
                                           .map((map) => map.values.toList())
                                           .toList());
-                              FileHandleApi.openFile(pdfFile);
-                            } else {
-                              final pdfFile =
-                                  await PdfAvailableProducts.client(_selecteds
-                                      .map((map) => map.values.toList())
-                                      .toList());
-                              FileHandleApi.openFile(pdfFile);
-                            }
+                                  FileHandleApi.openFile(pdfFile);
+                                } else {
+                                  final pdfFile = await PdfBarcode.generate(
+                                      _selecteds
+                                          .map((map) => map.values.toList())
+                                          .toList());
+                                  FileHandleApi.openFile(pdfFile);
+                                }
 
-                            // opening the pdf file
-                          },
-                          icon: const Icon(Icons.receipt_long_rounded),
-                          label: const Text("تقرير"),
+                                // opening the pdf file
+                              },
+                              icon: const Icon(Icons.qr_code_2_outlined),
+                              label: const Text("باركود"),
+                            ),
+                          ],
                         ),
                         reponseScreenSizes: const [ScreenSize.sm],
                         actions: [
@@ -266,7 +307,7 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
                             Expanded(
                                 child: TextField(
                               decoration: InputDecoration(
-                                  hintText: 'ادخل اسم العميل',
+                                  hintText: 'ادخل اسم المنتج',
                                   hintStyle: Styles.textStyle14,
                                   prefixIcon: IconButton(
                                       icon: const Icon(Icons.cancel),
@@ -312,7 +353,101 @@ class _ClientShowScreenState extends State<ClientShowScreen> {
                           /// print(value);
                           /// print(header);
                         },
-                        onTabRow: (data) {},
+                        onTabRow: (data) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('الرصيد الافتتاحي للعميل'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      BlocBuilder<MicroCubit, MicroStates>(
+                                        builder: (context, state) {
+                                          return Card(
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                    'اسم العميل: ${data["clientName"]}'),
+                                                Row(
+                                                  children: [
+                                                    Text('له'),
+                                                    Radio(
+                                                      value: true,
+                                                      groupValue:
+                                                          cubit.isForHim,
+                                                      onChanged: (value) {
+                                                        cubit.getHim(
+                                                            isFor: true);
+                                                      },
+                                                    ),
+                                                    Text('عليه'),
+                                                    Radio(
+                                                      value: false,
+                                                      groupValue:
+                                                          cubit.isForHim,
+                                                      onChanged: (value) {
+                                                        cubit.getHim(
+                                                            isFor: false);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                                CustomTextField(
+                                                  label: cubit.isForHim
+                                                      ? 'له'
+                                                      : 'عليه',
+                                                  controller: cubit.isForHim
+                                                      ? forHim
+                                                      : onHim,
+                                                  // controller:
+                                                  //     TextEditingController(
+                                                  //   text: cubit.isForHim
+                                                  //       ? data['clientForHim']
+                                                  //           .toString()
+                                                  //       : data['clientOnHim']
+                                                  //           .toString(),
+                                                  // ),
+                                                  keyboardType:
+                                                      TextInputType.text,
+                                                  validate: (value) {
+                                                    if (cubit.isForHim) {
+                                                      data['clientForHim'] =
+                                                          value;
+                                                    } else {
+                                                      data['clientOnHim'] =
+                                                          value;
+                                                    }
+                                                  },
+                                                ),
+                                                TextField(),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        cubit.updateClient(
+                                          clients: ClientModel(
+                                            clientId: data['clientId'],
+                                            forHim: data['forHim'],
+                                            onHim: data['onHim'],
+                                            clientName: data['clientName'],
+                                            clientNote: data['clientNote'],
+                                            clientPhone: data['clientPhone'],
+                                          ),
+                                        );
+                                      },
+                                      child: Text('حفظ'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
                         onSort: (value) {
                           setState(() => _isLoading = true);
 

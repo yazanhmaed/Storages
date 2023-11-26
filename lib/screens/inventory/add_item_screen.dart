@@ -4,6 +4,7 @@ import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
+import 'package:storage/resources/widgets/doastWidget.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 
@@ -20,7 +21,11 @@ class AddProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MicroCubit, MicroStates>(
-      listener: (BuildContext context, MicroStates state) {},
+      listener: (BuildContext context, MicroStates state) {
+        if (state is InsertDatabaseState) {
+          showToast(text: 'تمت إضافة المنتج بنجاح', state: ToastState.eRORR);
+        }
+      },
       builder: (BuildContext context, MicroStates state) {
         var cubit = MicroCubit.get(context);
 

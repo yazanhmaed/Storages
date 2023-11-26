@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/my_cared.dart';
 import 'package:storage/screens/client/add_client_screen.dart';
+import 'package:storage/screens/client/balance.dart';
 import 'package:storage/screens/client/client_show.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-
 
 class ClientScreen extends StatelessWidget {
   const ClientScreen({super.key});
@@ -54,6 +54,18 @@ class ClientScreen extends StatelessWidget {
                       },
                       icon: Icons.search,
                       text: "عرض العملاء",
+                    ),
+                    MyCared(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  BalanceScreen(currentPerPage: cubit.c.length),
+                            ));
+                      },
+                      icon: Icons.add,
+                      text: "الارصدة الافتتاحيه للعملاء",
                     ),
                   ]),
                 ),

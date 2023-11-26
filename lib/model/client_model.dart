@@ -3,21 +3,24 @@ class ClientModel {
   int? clientNote;
   int? clientPhone;
   int? clientId;
-
+  double? forHim;
+  double? onHim;
 
   ClientModel({
     this.clientName,
     this.clientNote,
     this.clientPhone,
     this.clientId,
-   
+    this.forHim,
+    this.onHim,
   });
   ClientModel.fromJson(Map<String, dynamic> json) {
     clientName = json['clientName'];
     clientNote = json['clientNote'];
     clientPhone = json['clientPhone'];
     clientId = json['clientId'];
-
+    forHim = json['forHim'];
+    onHim = json['onHim'];
   }
 
   Map<String, dynamic> toMap() {
@@ -26,7 +29,8 @@ class ClientModel {
       'clientNote': clientNote,
       'clientPhone': clientPhone,
       'clientId': clientId,
-      
+      'forHim': forHim,
+      'onHim': onHim,
     };
   }
 }

@@ -4,6 +4,7 @@ import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
+import 'package:storage/resources/widgets/doastWidget.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 
@@ -20,7 +21,11 @@ class AddClientScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MicroCubit, MicroStates>(
-      listener: (BuildContext context, MicroStates state) {},
+      listener: (BuildContext context, MicroStates state) {
+        if (state is InsertDatabaseState) {
+          showToast(text: 'تمت إضافة العميل بنجاح', state: ToastState.eRORR);
+        }
+      },
       builder: (BuildContext context, MicroStates state) {
         var cubit = MicroCubit.get(context);
 
@@ -134,12 +139,14 @@ class AddClientScreen extends StatelessWidget {
                             child: ElevatedButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  // القيام بالإجراءات المطلوبة هنا
                                   print('11111111111111111111111');
                                   cubit.insertClientDatabase(
                                       clientName: clientName.text,
                                       clientPhone: clientPhone.text,
-                                      clientNOTE: clientNote.text);
+                                      clientNOTE: clientNote.text,
+                                      onHim: 0.0,
+                                      forHim: 0.0);
+
                                   Navigator.of(context).pop();
                                 }
                               },

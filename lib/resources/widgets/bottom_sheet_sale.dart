@@ -97,32 +97,27 @@ class _InfoScreenState extends State<InfoSaleScreen>
                 padding: const EdgeInsets.only(top: 30, right: 10, left: 10),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildInfoColumn(
-                            'أسم المنتج', '${widget.data.itemName}'),
-                        buildInfoColumn('الكمية', '${widget.data.itemCount}'),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
+                    buildInfoColumn('أسم المنتج', '${widget.data.itemName}'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         buildInfoColumn(
                             'سعر البيع', '${widget.data.itemPrice}'),
-                        buildInfoColumn('التكلفة', '${widget.data.itemCost}'),
                         buildInfoColumn('التعبئة', '${widget.data.itemFill}'),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        buildInfoColumn('الكمية', '${widget.data.itemCount}'),
+                        buildInfoColumn('التكلفة', '${widget.data.itemCost}'),
                       ],
                     ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 80,
-              ),
               Positioned(
-                top: (MediaQuery.of(context).size.width / 1.8),
+                top: (MediaQuery.of(context).size.width / 1.2),
                 bottom: 0,
                 left: 0,
                 right: 0,
@@ -272,7 +267,7 @@ class _InfoScreenState extends State<InfoSaleScreen>
                 ),
               ),
               Positioned(
-                top: (MediaQuery.of(context).size.width / 2.1),
+                top: (MediaQuery.of(context).size.width / 1.3),
                 right: 35,
                 child: ScaleTransition(
                   scale: CurvedAnimation(

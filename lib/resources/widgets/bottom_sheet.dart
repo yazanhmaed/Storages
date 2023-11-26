@@ -88,41 +88,9 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
         return Material(
           child: Stack(
             children: <Widget>[
-              // Column(
-              //   children: <Widget>[
-              //     AspectRatio(
-              //       aspectRatio: 1.2,
-              //       child: GestureDetector(
-              //         onTap: () async {
-              //           await showDialog(
-              //               context: context,
-              //               builder: (_) => Dialog(
-              //                     child: Stack(
-              //                       alignment: Alignment.topRight,
-              //                       children: [
-              //                         IconButton(
-              //                             onPressed: () {
-              //                               Navigator.pop(context);
-              //                             },
-              //                             icon: const Text(
-              //                               'X',
-              //                               style: TextStyle(
-              //                                   color: Colors.red,
-              //                                   fontSize: 30,
-              //                                   fontWeight: FontWeight.bold),
-              //                             )),
-              //                       ],
-              //                     ),
-              //                   ));
-              //         },
-              //       ),
-              //     ),
-              //   ],
-              // ),
               Padding(
                 padding: const EdgeInsets.only(top: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                child: Column(
                   children: [
                     Column(
                       children: [
@@ -142,63 +110,77 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                         ),
                       ],
                     ),
-                    Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('الكمية', style: Styles.textStyle18),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green),
-                              color: Colors.green.shade200),
-                          child: Text('${widget.data['itemCount']}',
-                              style: Styles.textStyle18),
+                        Column(
+                          children: [
+                            Text('الكمية', style: Styles.textStyle18),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              margin: EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border:
+                                      Border.all(width: 2, color: Colors.green),
+                                  color: Colors.green.shade200),
+                              child: Text('${widget.data['itemCount']}',
+                                  style: Styles.textStyle18),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text('سعر البيع', style: Styles.textStyle18),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              margin: EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border:
+                                      Border.all(width: 2, color: Colors.green),
+                                  color: Colors.green.shade200),
+                              child: Text('${widget.data['itemPrice']}',
+                                  style: Styles.textStyle18),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('سعر البيع', style: Styles.textStyle18),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green),
-                              color: Colors.green.shade200),
-                          child: Text('${widget.data['itemPrice']}',
-                              style: Styles.textStyle18),
+                        Column(
+                          children: [
+                            Text('التكلفة', style: Styles.textStyle18),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              margin: EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border:
+                                      Border.all(width: 2, color: Colors.green),
+                                  color: Colors.green.shade200),
+                              child: Text('${widget.data['itemCost']}',
+                                  style: Styles.textStyle18),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text('التكلفة', style: Styles.textStyle18),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green),
-                              color: Colors.green.shade200),
-                          child: Text('${widget.data['itemCost']}',
-                              style: Styles.textStyle18),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text('التعبئة', style: Styles.textStyle18),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          margin: EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(width: 2, color: Colors.green),
-                              color: Colors.green.shade200),
-                          child: Text('${widget.data['itemFill']}',
-                              style: Styles.textStyle18),
+                        Column(
+                          children: [
+                            Text('التعبئة', style: Styles.textStyle18),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              margin: EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border:
+                                      Border.all(width: 2, color: Colors.green),
+                                  color: Colors.green.shade200),
+                              child: Text('${widget.data['itemFill']}',
+                                  style: Styles.textStyle18),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -206,7 +188,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
                 ),
               ),
               Positioned(
-                top: (MediaQuery.of(context).size.width / 1.8),
+                top: (MediaQuery.of(context).size.width / 1.1),
                 bottom: 0,
                 left: 0,
                 right: 0,
@@ -352,7 +334,7 @@ class _InfoScreenState extends State<InfoScreen> with TickerProviderStateMixin {
               ),
               //icon button close
               Positioned(
-                top: (MediaQuery.of(context).size.width / 2.1),
+                top: (MediaQuery.of(context).size.width / 1.2),
                 right: 35,
                 child: ScaleTransition(
                   scale: CurvedAnimation(

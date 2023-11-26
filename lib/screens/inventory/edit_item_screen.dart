@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:storage/model/item_model.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
+import 'package:storage/resources/widgets/doastWidget.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 
@@ -33,7 +34,15 @@ class EditProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MicroCubit, MicroStates>(
-      listener: (BuildContext context, MicroStates state) {},
+      listener: (BuildContext context, MicroStates state) {
+        if (state is UpdataDatabaseState) {
+          showToast(
+              text: "تمت تعديل بيانات المنتج بنجاح", state: ToastState.eRORR);
+        }
+        if (state is DeleteDatabaseState) {
+          showToast(text: "تمت حذف المنتج", state: ToastState.eRORR);
+        }
+      },
       builder: (BuildContext context, MicroStates state) {
         var cubit = MicroCubit.get(context);
 
@@ -216,7 +225,7 @@ class EditProductScreen extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Text(
-                                  'حفظ',
+                                  "تعديل",
                                   style: Styles.textStyle14,
                                 ),
                               ),
