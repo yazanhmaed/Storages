@@ -10,6 +10,7 @@ import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/bottom_sheet.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
+import 'package:storage/screens/client/client_screen.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 import 'package:storage/screens/inventory/inventory_screen.dart';
@@ -207,7 +208,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
             ],
             leading: IconButton(
                 onPressed: () {
-                  navigateAndFinish(context, InventoryScreen());
+                  navigateAndFinish(context, ClientScreen());
                 },
                 icon: Icon(Icons.arrow_back_ios)),
           ),

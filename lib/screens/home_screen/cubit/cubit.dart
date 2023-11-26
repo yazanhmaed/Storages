@@ -180,17 +180,23 @@ class MicroCubit extends Cubit<MicroStates> {
       emit(UpdataDatabaseErrorState());
     });
   }
+Future updateClient({required ClientModel clients}) async {
+  await dataBase.update(
+    'clients',
+    clients.toMap(),
+    where: 'clientName = ?',
+    whereArgs: [clients.clientName],
+  ).then((value) {
+    
+    getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
+    emit(UpdataDatabaseState());
+  }).catchError((onError) {
+ 
+    print(onError);
+    emit(UpdataDatabaseErrorState());
+  });
+}
 
-  Future updateClient({required ClientModel clients}) async {
-    await dataBase.update('clients', clients.toMap(),
-        where: 'clientName = ?', whereArgs: [clients.clientName]).then((value) {
-      getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
-      emit(UpdataDatabaseState());
-    }).catchError((onError) {
-      print(onError);
-      emit(UpdataDatabaseErrorState());
-    });
-  }
   // static Future<int> deleteAll() async {
   //   print('delete All');
   //   return await _db!
