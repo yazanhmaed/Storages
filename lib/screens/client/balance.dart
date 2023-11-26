@@ -1,19 +1,16 @@
 // ignore_for_file: library_private_types_in_public_api, unused_element, avoid_print, avoid_unnecessary_containers, prefer_const_constructors
 
 import 'dart:math';
-import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
 import 'package:storage/model/client_model.dart';
 import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
-import 'package:storage/resources/widgets/bottom_sheet.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
 import 'package:storage/screens/client/client_screen.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/inventory/inventory_screen.dart';
 import 'package:storage/screens/pdf/availble_products.dart';
 import 'package:storage/screens/pdf/barcode.dart';
 import 'package:storage/screens/pdf/file_handle_api.dart';
@@ -56,7 +53,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
         'clientPhone': data.clientPhone,
         'clientId': data.clientId,
         'onHim': data.onHim,
-        'forHim': data.onHim,
+        'forHim': data.forHim,
       });
     }
 
@@ -413,12 +410,11 @@ class _BalanceScreenState extends State<BalanceScreen> {
                                                       TextInputType.text,
                                                   validate: (value) {
                                                     if (cubit.isForHim) {
-                                                      data['clientForHim'] =
-                                                          value;
+                                                      data['forHim'] = value;
                                                     } else {
-                                                      data['clientOnHim'] =
-                                                          value;
+                                                      data['onHim'] = value;
                                                     }
+                                                    return null;
                                                   },
                                                 ),
                                                 TextField(),
@@ -435,13 +431,20 @@ class _BalanceScreenState extends State<BalanceScreen> {
                                         cubit.updateClient(
                                           clients: ClientModel(
                                             clientId: data['clientId'],
-                                            forHim: data['forHim'],
-                                            onHim: data['onHim'],
+                                            forHim: cubit.isForHim
+                                                ? double.tryParse(forHim.text)
+                                                : double.tryParse(
+                                                    data['forHim'].toString()),
+                                            onHim: cubit.isForHim
+                                                ? double.tryParse(
+                                                    data['onHim'].toString())
+                                                :  double.tryParse(onHim.text),
                                             clientName: data['clientName'],
                                             clientNote: data['clientNote'],
                                             clientPhone: data['clientPhone'],
                                           ),
                                         );
+                                        Navigator.of(context).pop();
                                       },
                                       child: Text('حفظ'),
                                     ),

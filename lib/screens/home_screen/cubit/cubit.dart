@@ -180,22 +180,33 @@ class MicroCubit extends Cubit<MicroStates> {
       emit(UpdataDatabaseErrorState());
     });
   }
-Future updateClient({required ClientModel clients}) async {
-  await dataBase.update(
-    'clients',
-    clients.toMap(),
-    where: 'clientName = ?',
-    whereArgs: [clients.clientName],
-  ).then((value) {
-    
-    getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
-    emit(UpdataDatabaseState());
-  }).catchError((onError) {
- 
-    print(onError);
-    emit(UpdataDatabaseErrorState());
-  });
-}
+
+  Future updateClient({required ClientModel clients}) async {
+    await dataBase.update(
+      'clients',
+      clients.toMap(),
+      where: 'clientId = ?',
+      whereArgs: [clients.clientId],
+    ).then((value) {
+      getDataFromDatabase(dataBase, dataClients: true, dataItems: false);
+      emit(UpdataDatabaseState());
+    }).catchError((onError) {
+      print(onError);
+      emit(UpdataDatabaseErrorState());
+    });
+  }
+
+  Future updateClient2({required ClientModel clients}) async {
+    await dataBase.rawUpdate(
+        'UPDATE clients SET onHim = ?, forHim = ? WHERE clientId = ?',
+        [1223, 9876.0, '${clients.clientId}']).then((value) {
+      getDataFromDatabase(dataBase, dataClients: true, dataItems: false);
+      emit(UpdataDatabaseState());
+    }).catchError((onError) {
+      print(onError);
+      emit(UpdataDatabaseErrorState());
+    });
+  }
 
   // static Future<int> deleteAll() async {
   //   print('delete All');
@@ -281,6 +292,7 @@ Future updateClient({required ClientModel clients}) async {
   bool isForHim = true;
   void getHim({required bool isFor}) {
     isForHim = isFor;
+    print(isForHim);
     emit(GetHim());
   }
 }
