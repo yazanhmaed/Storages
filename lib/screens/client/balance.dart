@@ -428,17 +428,31 @@ class _BalanceScreenState extends State<BalanceScreen> {
                                   actions: [
                                     TextButton(
                                       onPressed: () {
+
+                                        cubit.isForHim?
                                         cubit.updateClient(
                                           clients: ClientModel(
                                             clientId: data['clientId'],
-                                            forHim: cubit.isForHim
-                                                ? double.tryParse(forHim.text)
-                                                : double.tryParse(
+                                            forHim:  (double.tryParse(
+                                                    data['onHim'].toString())==0)? double.tryParse(
+                                                    forHim.text):(double.tryParse(
+                                                    forHim.text)!-double.tryParse(
+                                                    data['onHim'].toString())!),
+                                            onHim: double.tryParse(
+                                                    data['onHim'].toString()),
+                                            clientName: data['clientName'],
+                                            clientNote: data['clientNote'],
+                                            clientPhone: data['clientPhone'],
+                                          ),
+                                        ):cubit.updateClient(
+                                          clients: ClientModel(
+                                            clientId: data['clientId'],
+                                            forHim:  double.tryParse(
                                                     data['forHim'].toString()),
-                                            onHim: cubit.isForHim
-                                                ? double.tryParse(
-                                                    data['onHim'].toString())
-                                                :  double.tryParse(onHim.text),
+                                            onHim: (double.tryParse(
+                                                    data['forHim'].toString())==0)?  double.tryParse(onHim.text):(double.tryParse(
+                                                    onHim.text)!-double.tryParse(
+                                                    data['forHim'].toString())!),
                                             clientName: data['clientName'],
                                             clientNote: data['clientNote'],
                                             clientPhone: data['clientPhone'],
