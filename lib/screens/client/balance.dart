@@ -407,7 +407,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                                                   //           .toString(),
                                                   // ),
                                                   keyboardType:
-                                                      TextInputType.text,
+                                                      TextInputType.number,
                                                   validate: (value) {
                                                     if (cubit.isForHim) {
                                                       data['forHim'] = value;
@@ -428,36 +428,58 @@ class _BalanceScreenState extends State<BalanceScreen> {
                                   actions: [
                                     TextButton(
                                       onPressed: () {
-
-                                        cubit.isForHim?
-                                        cubit.updateClient(
-                                          clients: ClientModel(
-                                            clientId: data['clientId'],
-                                            forHim:  (double.tryParse(
-                                                    data['onHim'].toString())==0)? double.tryParse(
-                                                    forHim.text):(double.tryParse(
-                                                    forHim.text)!-double.tryParse(
-                                                    data['onHim'].toString())!),
-                                            onHim: double.tryParse(
-                                                    data['onHim'].toString()),
-                                            clientName: data['clientName'],
-                                            clientNote: data['clientNote'],
-                                            clientPhone: data['clientPhone'],
-                                          ),
-                                        ):cubit.updateClient(
-                                          clients: ClientModel(
-                                            clientId: data['clientId'],
-                                            forHim:  double.tryParse(
-                                                    data['forHim'].toString()),
-                                            onHim: (double.tryParse(
-                                                    data['forHim'].toString())==0)?  double.tryParse(onHim.text):(double.tryParse(
-                                                    onHim.text)!-double.tryParse(
-                                                    data['forHim'].toString())!),
-                                            clientName: data['clientName'],
-                                            clientNote: data['clientNote'],
-                                            clientPhone: data['clientPhone'],
-                                          ),
-                                        );
+                                        cubit.isForHim
+                                            ? cubit.updateClient(
+                                                clients: ClientModel(
+                                                  clientId: data['clientId'],
+                                                  forHim: (double.tryParse(data[
+                                                                  'onHim']
+                                                              .toString()) ==
+                                                          0)
+                                                      ? double.tryParse(
+                                                          forHim.text)
+                                                      : (double.tryParse(
+                                                              forHim.text)! -
+                                                          double.tryParse(data[
+                                                                  'onHim']
+                                                              .toString())!),
+                                                  onHim: double.tryParse(
+                                                      data['onHim'].toString()),
+                                                  clientName:
+                                                      data['clientName'],
+                                                  clientNote:
+                                                      data['clientNote'],
+                                                  clientPhone:
+                                                      data['clientPhone'],
+                                                ),
+                                              )
+                                            : cubit.updateClient(
+                                                clients: ClientModel(
+                                                  clientId: data['clientId'],
+                                                  forHim: double.tryParse(
+                                                      data['forHim']
+                                                          .toString()),
+                                                  onHim: (double.tryParse(data[
+                                                                  'forHim']
+                                                              .toString()) ==
+                                                          0)
+                                                      ? double.tryParse(
+                                                          onHim.text)
+                                                      : (double.tryParse(
+                                                              onHim.text)! -
+                                                          double.tryParse(data[
+                                                                  'forHim']
+                                                              .toString())!),
+                                                  clientName:
+                                                      data['clientName'],
+                                                  clientNote:
+                                                      data['clientNote'],
+                                                  clientPhone:
+                                                      data['clientPhone'],
+                                                ),
+                                              );
+                                              forHim.clear();
+                                              
                                         Navigator.of(context).pop();
                                       },
                                       child: Text('حفظ'),

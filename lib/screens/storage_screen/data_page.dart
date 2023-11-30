@@ -192,7 +192,7 @@ class _DataPageState extends State<DataPage> {
           appBar: AppBar(
             title: Text(
               "المنتجات المتوفره في المخزون",
-              style: Styles.textStyle25.copyWith(color: Colors.white),
+              style: Styles.textStyle25.copyWith(),
             ),
             actions: [
               IconButton(
@@ -232,11 +232,11 @@ class _DataPageState extends State<DataPage> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                    ),
+                        // border: Border.all(
+                        //   color: Colors.black,
+                        //   width: 2.0,
+                        // ),
+                        ),
                     constraints: const BoxConstraints(
                       maxHeight: 700,
                     ),
@@ -274,7 +274,6 @@ class _DataPageState extends State<DataPage> {
                             ),
                             TextButton.icon(
                               onPressed: () async {
-                                // generate pdf file
                                 if (_selecteds.isEmpty) {
                                   final pdfFile = await PdfBarcode.generate(
                                       sourceOriginal
@@ -288,8 +287,6 @@ class _DataPageState extends State<DataPage> {
                                           .toList());
                                   FileHandleApi.openFile(pdfFile);
                                 }
-
-                                // opening the pdf file
                               },
                               icon: const Icon(Icons.qr_code_2_outlined),
                               label: const Text("باركود"),

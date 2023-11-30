@@ -4,11 +4,14 @@ import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/model/client_model.dart';
+import 'package:storage/model/item_model.dart';
 import 'package:storage/model/sale_model.dart';
+import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/bottom_sheet_sale.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
+import 'package:storage/screens/home_screen/layout_screen.dart';
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});
@@ -113,6 +116,11 @@ class _SalesState extends State<SalesScreen> {
           onWillPop: () => _onWillPop(context),
           child: Scaffold(
             appBar: AppBar(
+              leading: IconButton(
+                  onPressed: () {
+                    navigateAndFinish(context, LayoutScreen());
+                  },
+                  icon: Icon(Icons.arrow_back_ios)),
               title: Text('المبيعات', style: Styles.textStyle25),
             ),
             body: Padding(
@@ -306,17 +314,14 @@ class _SalesState extends State<SalesScreen> {
 
                                                   cubit.calculateTotalCount(
                                                       list: salesItems1);
+
                                                   print(salesItems1[index]
-                                                      .itemCostb);
+                                                      .itemCount);
+
                                                   cubit.calculateTotalCost(
                                                       salesItems1: salesItems1);
                                                 },
                                                 onLongPress: () {
-                                                  setState(() {
-                                                    salesItems1[index]
-                                                        .itemCountb = 1;
-                                                  });
-
                                                   cubit.calculateTotalCount(
                                                       list: salesItems1);
                                                   cubit.calculateTotalCost(

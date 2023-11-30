@@ -2,11 +2,14 @@
 
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
+import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
 import 'package:storage/resources/widgets/doastWidget.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
+import 'package:storage/screens/home_screen/layout_screen.dart';
+import 'package:storage/screens/inventory/inventory_screen.dart';
 
 class AddProductScreen extends StatelessWidget {
   AddProductScreen({super.key});
@@ -35,12 +38,17 @@ class AddProductScreen extends StatelessWidget {
         return Scaffold(
             appBar: AppBar(
               title: Text(
-                'المخزون',
+                "اضافة منتج",
                 style: Styles.textStyle25,
               ),
+              leading: IconButton(
+                  onPressed: () {
+                    navigateAndFinish(context, InventoryScreen());
+                  },
+                  icon: Icon(Icons.arrow_back_ios)),
             ),
             body: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20.0),
               child: CustomScrollView(
                 slivers: [
                   SliverToBoxAdapter(
@@ -101,6 +109,22 @@ class AddProductScreen extends StatelessWidget {
                                 if (map.itemName == value) {
                                   return 'المنتج موجود';
                                 }
+                              }
+                              return null;
+                            },
+                          ),
+                          Text(
+                            'الكميه',
+                            style: Styles.textStyle14,
+                          ),
+                          CustomTextField(
+                            label: '',
+                            hintText: '0',
+                            controller: itemCountr,
+                            keyboardType: TextInputType.number,
+                            validate: (value) {
+                              if (value!.isEmpty) {
+                                return 'النص مطلوب';
                               }
                               return null;
                             },
@@ -191,22 +215,6 @@ class AddProductScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          Text(
-                            'الكميه',
-                            style: Styles.textStyle14,
-                          ),
-                          CustomTextField(
-                            label: '',
-                            hintText: '0',
-                            controller: itemCountr,
-                            keyboardType: TextInputType.number,
-                            validate: (value) {
-                              if (value!.isEmpty) {
-                                return 'النص مطلوب';
-                              }
-                              return null;
-                            },
-                          ),
                           Center(
                             child: ElevatedButton(
                               onPressed: () {
