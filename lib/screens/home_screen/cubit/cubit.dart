@@ -6,6 +6,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:storage/model/client_model.dart';
+import 'package:storage/model/invocie_model.dart';
 import 'package:storage/model/item_model.dart';
 import 'package:storage/model/sale_model.dart';
 
@@ -25,6 +26,7 @@ class MicroCubit extends Cubit<MicroStates> {
 
   late Database dataBase;
   void createDatabase() {
+    print('object');
     openDatabase(
       'add.db',
       version: 2,
@@ -49,16 +51,52 @@ class MicroCubit extends Cubit<MicroStates> {
         }).catchError((error) {
           print('Error creating Clients table: ${error.toString()}');
         });
+        // await database.execute(
+        //     '''
+        //   CREATE TABLE customers(
+        //    clientId INTEGER  ,clientName TEXT,clientNOTE TEXT,clientPhone INTEGER,onHim REAL, forHim REAL
+        //   )
+        // ''').then((_) {
+        //   print('customers table created');
+        // }).catchError((error) {
+        //   print('Error creating Clients table: ${error.toString()}');
+        // });
+        await database.execute('''
+          CREATE TABLE invoices(
+            id INTEGER PRIMARY KEY,
+            itemNumber INTEGER  ,itemName TEXT,itemPrice INTEGER,itemCost INTEGER , itemFill INTEGER,itemCount INTEGER,
+            clientsId INTEGER,
+            FOREIGN KEY (clientsId) REFERENCES clients(clientId)
+          )
+        ''').then((_) {
+          print('invoices table created');
+        }).catchError((error) {
+          print('Error creating Clients table: ${error.toString()}');
+        });
       },
       onOpen: (database) {
         getDataFromDatabase(database, dataClients: true, dataItems: true);
         // getDataFromClientDatabase(dataBase);
+        // invocieList(database);
         print('Database opened');
       },
     ).then((value) {
       dataBase = value;
       emit(CreateDatabaseState());
     });
+  }
+
+  void insertCustomer({required InVocieModel inVocieModel}) async {
+    dataBase.transaction((txn) => txn
+            .rawInsert(
+                'INSERT INTO invoices(itemNumber,itemName,itemPrice,itemCost,itemFill,itemCount,clientsId) VALUES("${inVocieModel.itemNumber}","${inVocieModel.itemName}","${inVocieModel.itemPrice}","${inVocieModel.itemCost}","${inVocieModel.itemFill}","${inVocieModel.itemCount}","${inVocieModel.customerId}")')
+            .then((value) {
+          print('$value inserted successfuly');
+          // getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
+          emit(InsertDatabaseState());
+        }).catchError((error) {
+          print('Error when Inserting New Record${error.toString()}');
+        }));
   }
 
   void insertToDatabase({
@@ -92,6 +130,7 @@ class MicroCubit extends Cubit<MicroStates> {
   List<Map> cl = [];
   List<ClientModel> c = [];
   List<Map<String, dynamic>> cleints = [];
+  List<InVocieModel> inVocie=[];
   void getDataFromDatabase(dataBase,
       {required bool dataItems, required bool dataClients}) {
     emit(GetDatabaseLodingState());
@@ -121,7 +160,20 @@ class MicroCubit extends Cubit<MicroStates> {
           cl.add(element);
           c.add(ClientModel.fromJson(element));
         });
+        print(c[0].clientId);
+        emit(GetDatabaseState());
+      });
+    }
+    if (dataClients == true) {
+    inVocie=[];
+     
 
+      dataBase.rawQuery('SELECT * FROM  invoices').then((value) {
+        value.forEach((element) {
+       
+          inVocie.add(InVocieModel.fromJson(element));
+        });
+        print(inVocie[0].itemName);
         emit(GetDatabaseState());
       });
     }
@@ -295,6 +347,4 @@ class MicroCubit extends Cubit<MicroStates> {
     print(isForHim);
     emit(GetHim());
   }
-
-  
 }

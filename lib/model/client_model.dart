@@ -25,12 +25,12 @@ class ClientModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'clientName': clientName,
-      'clientNote': clientNote,
-      'clientPhone': clientPhone,
-      'clientId': clientId,
-      'forHim': forHim,
-      'onHim': onHim,
+      'clientName': 'clientName',
+      'clientNote': 1,
+      'clientPhone': 078,
+      'clientId': 2,
+      'forHim': 2,
+      'onHim': 5,
     };
   }
 }

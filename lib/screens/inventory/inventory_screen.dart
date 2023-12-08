@@ -32,6 +32,13 @@ class InventoryScreen extends StatelessWidget {
                   navigateAndFinish(context, LayoutScreen());
                 },
                 icon: Icon(Icons.arrow_back_ios)),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    // cubit.invocieList();
+                  },
+                  icon: Icon(Icons.add)),
+            ],
           ),
           body: SafeArea(
             child: CustomScrollView(

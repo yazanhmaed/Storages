@@ -4,6 +4,7 @@ import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/model/client_model.dart';
+import 'package:storage/model/invocie_model.dart';
 import 'package:storage/model/sale_model.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/bottom_sheet_sale.dart';
@@ -160,8 +161,31 @@ class _SalesState extends State<SalesScreen> {
                             )),
                             IconButton(
                                 onPressed: () {
-                                  salesItems1 = [];
-                                  setState(() {});
+                                  // salesItems1 = [];
+                                  // setState(() {});
+                                  // print(clientList.length);
+                                  // print(clientList[0].clientId);
+                                  cubit.insertCustomer(
+                                      inVocieModel: InVocieModel(
+                                    itemNumber: salesItems1[0].itemNumber,
+                                    itemName: salesItems1[0].itemName,
+                                    itemPrice: salesItems1[0].itemPrice,
+                                    itemCost: salesItems1[0].itemCost,
+                                    itemCount: salesItems1[0].itemCountb,
+                                    itemFill: salesItems1[0].itemFill,
+                                    customerId: 1,
+                                  ));
+                                  // // for (var i = 0; i < salesItems1.length; i++) {
+                                  //   cubit.insertInvoice(InVocieModel(
+                                  //     customerId: clientList[0].clientId,
+                                  //     itemNumber: salesItems1[i].itemNumber,
+                                  //     itemName: salesItems1[i].itemName,
+                                  //     itemCost: salesItems1[i].itemCost,
+                                  //     itemCount: salesItems1[i].itemCountb,
+                                  //     itemFill: salesItems1[i].itemFill,
+                                  //     itemPrice: salesItems1[i].itemPrice,
+                                  //   ));
+                                  // }
                                 },
                                 icon:
                                     const Icon(Icons.monetization_on_rounded)),
@@ -175,7 +199,9 @@ class _SalesState extends State<SalesScreen> {
                                 hintStyle: Styles.textStyle14,
                                 prefixIcon: IconButton(
                                     icon: const Icon(Icons.cancel),
-                                    onPressed: () {}),
+                                    onPressed: () {
+                                      nameClient.clear();
+                                    }),
                                 suffixIcon: IconButton(
                                     icon: const Icon(Icons.search),
                                     onPressed: () {})),
@@ -186,10 +212,12 @@ class _SalesState extends State<SalesScreen> {
                                 return clientTitle.contains(input);
                               }).toList();
                               setState(() {
-                                clientList = suggestions;
+                                clientList.add(cubit.c[1]);
                               });
+                              print(suggestions);
                             },
                             onSubmitted: (value) {
+                              clientList.add(cubit.c[1]);
                               print(clientList);
                             },
                           ),
@@ -200,7 +228,7 @@ class _SalesState extends State<SalesScreen> {
                     child: Card(
                       color: Colors.grey[500],
                       child: ListTile(
-                        leading: Container(
+                        leading: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.2,
                           child: Text(
                             'المنتج',
@@ -272,7 +300,7 @@ class _SalesState extends State<SalesScreen> {
                                           isExpand: false,
                                         );
                                       },
-                                      leading: Container(
+                                      leading: SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.2,
