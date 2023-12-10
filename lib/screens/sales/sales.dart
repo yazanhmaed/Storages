@@ -4,6 +4,7 @@ import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/model/client_model.dart';
+import 'package:storage/model/invocie_model.dart';
 import 'package:storage/model/sale_model.dart';
 import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
@@ -171,27 +172,19 @@ class _SalesState extends State<SalesScreen> {
                                   // setState(() {});
                                   // print(clientList.length);
                                   // print(clientList[0].clientId);
-                                  cubit.insertCustomer(
-                                      inVocieModel: InVocieModel(
-                                    itemNumber: salesItems1[0].itemNumber,
-                                    itemName: salesItems1[0].itemName,
-                                    itemPrice: salesItems1[0].itemPrice,
-                                    itemCost: salesItems1[0].itemCost,
-                                    itemCount: salesItems1[0].itemCountb,
-                                    itemFill: salesItems1[0].itemFill,
-                                    customerId: 1,
-                                  ));
-                                  // // for (var i = 0; i < salesItems1.length; i++) {
-                                  //   cubit.insertInvoice(InVocieModel(
-                                  //     customerId: clientList[0].clientId,
-                                  //     itemNumber: salesItems1[i].itemNumber,
-                                  //     itemName: salesItems1[i].itemName,
-                                  //     itemCost: salesItems1[i].itemCost,
-                                  //     itemCount: salesItems1[i].itemCountb,
-                                  //     itemFill: salesItems1[i].itemFill,
-                                  //     itemPrice: salesItems1[i].itemPrice,
-                                  //   ));
-                                  // }
+                                  for (var i = 0; i < salesItems1.length; i++) {
+                                    cubit.insertCustomer(
+                                        inVocieModel: InVocieModel(
+                                      id: 3,
+                                      itemNumber: salesItems1[i].itemNumber,
+                                      itemName: salesItems1[i].itemName,
+                                      itemPrice: salesItems1[i].itemPrice,
+                                      itemCost: salesItems1[i].itemCost,
+                                      itemCount: salesItems1[i].itemCountb,
+                                      itemFill: salesItems1[i].itemFill,
+                                      customerId: 2,
+                                    ));
+                                  }
                                 },
                                 icon:
                                     const Icon(Icons.monetization_on_rounded)),

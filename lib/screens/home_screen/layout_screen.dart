@@ -9,6 +9,7 @@ import 'package:storage/screens/client/client_screen.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 import 'package:storage/screens/inventory/inventory_screen.dart';
+import 'package:storage/screens/invoice/invoice_clients.dart';
 import 'package:storage/screens/sales/sales.dart';
 
 class LayoutScreen extends StatelessWidget {
@@ -61,6 +62,17 @@ class LayoutScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ClientScreen(),
+                          ));
+                    },
+                    image: 'assets/images/client.png',
+                  ),
+                  MyStack(
+                    text: 'الفواتير',
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InvocieClientsScreen(),
                           ));
                     },
                     image: 'assets/images/client.png',

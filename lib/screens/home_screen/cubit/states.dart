@@ -13,6 +13,8 @@ class IsCheckedSaleAndBuyingState extends MicroStates {}
 class CreateDatabaseState extends MicroStates {}
 
 class GetDatabaseState extends MicroStates {}
+class GetinvoiceClientListState extends MicroStates {}
+class GetinvoiceItemListState extends MicroStates {}
 
 class InsertDatabaseState extends MicroStates {}
 

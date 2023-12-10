@@ -1,4 +1,5 @@
 class InVocieModel {
+  int? id;
   int? itemNumber;
   String? itemName;
   int? itemPrice;
@@ -7,9 +8,8 @@ class InVocieModel {
   int? itemCount;
   int? customerId;
 
-  
-
   InVocieModel({
+    this.id,
     this.itemNumber,
     this.itemName,
     this.itemPrice,
@@ -17,9 +17,9 @@ class InVocieModel {
     this.itemFill,
     this.itemCount,
     this.customerId,
- 
   });
   InVocieModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     itemNumber = json['itemNumber'];
     itemName = json['itemName'];
     itemPrice = json['itemPrice'];
@@ -27,11 +27,11 @@ class InVocieModel {
     itemFill = json['itemFill'];
     itemCount = json['itemCount'];
     customerId = json['customerId'];
- 
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'itemNumber': itemNumber,
       'itemName': itemName,
       'itemPrice': itemPrice,
@@ -39,7 +39,6 @@ class InVocieModel {
       'itemFill': itemFill,
       'itemCount': itemCount,
       'customerId': customerId,
-
     };
   }
 

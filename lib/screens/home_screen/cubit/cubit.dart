@@ -51,19 +51,11 @@ class MicroCubit extends Cubit<MicroStates> {
         }).catchError((error) {
           print('Error creating Clients table: ${error.toString()}');
         });
-        // await database.execute(
-        //     '''
-        //   CREATE TABLE customers(
-        //    clientId INTEGER  ,clientName TEXT,clientNOTE TEXT,clientPhone INTEGER,onHim REAL, forHim REAL
-        //   )
-        // ''').then((_) {
-        //   print('customers table created');
-        // }).catchError((error) {
-        //   print('Error creating Clients table: ${error.toString()}');
-        // });
-        await database.execute('''
+
+        await database.execute(
+            '''
           CREATE TABLE invoices(
-            id INTEGER PRIMARY KEY,
+            id INTEGER ,
             itemNumber INTEGER  ,itemName TEXT,itemPrice INTEGER,itemCost INTEGER , itemFill INTEGER,itemCount INTEGER,
             clientsId INTEGER,
             FOREIGN KEY (clientsId) REFERENCES clients(clientId)
@@ -89,7 +81,7 @@ class MicroCubit extends Cubit<MicroStates> {
   void insertCustomer({required InVocieModel inVocieModel}) async {
     dataBase.transaction((txn) => txn
             .rawInsert(
-                'INSERT INTO invoices(itemNumber,itemName,itemPrice,itemCost,itemFill,itemCount,clientsId) VALUES("${inVocieModel.itemNumber}","${inVocieModel.itemName}","${inVocieModel.itemPrice}","${inVocieModel.itemCost}","${inVocieModel.itemFill}","${inVocieModel.itemCount}","${inVocieModel.customerId}")')
+                'INSERT INTO invoices(id,itemNumber,itemName,itemPrice,itemCost,itemFill,itemCount,clientsId) VALUES("${inVocieModel.id}","${inVocieModel.itemNumber}","${inVocieModel.itemName}","${inVocieModel.itemPrice}","${inVocieModel.itemCost}","${inVocieModel.itemFill}","${inVocieModel.itemCount}","${inVocieModel.customerId}")')
             .then((value) {
           print('$value inserted successfuly');
           // getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
@@ -130,7 +122,7 @@ class MicroCubit extends Cubit<MicroStates> {
   List<Map> cl = [];
   List<ClientModel> c = [];
   List<Map<String, dynamic>> cleints = [];
-  List<InVocieModel> inVocie=[];
+  List<InVocieModel> inVocie = [];
   void getDataFromDatabase(dataBase,
       {required bool dataItems, required bool dataClients}) {
     emit(GetDatabaseLodingState());
@@ -154,7 +146,6 @@ class MicroCubit extends Cubit<MicroStates> {
       });
     }
     if (dataClients == true) {
-      cl = [];
       c = [];
       cleints = [];
       dataBase.rawQuery('SELECT * FROM  clients').then((value) {
@@ -164,23 +155,62 @@ class MicroCubit extends Cubit<MicroStates> {
           print('cccc');
           print(element['itemCount']);
         });
-        print(c[0].clientId);
+        // print(c[0].clientId);
         emit(GetDatabaseState());
       });
     }
     if (dataClients == true) {
-    inVocie=[];
-     
+      inVocie = [];
 
-      dataBase.rawQuery('SELECT * FROM  invoices').then((value) {
+      dataBase
+          .rawQuery('SELECT * FROM  invoices WHERE clientsId=1 & id=1')
+          .then((value) {
         value.forEach((element) {
-       
           inVocie.add(InVocieModel.fromJson(element));
         });
-        print(inVocie[0].itemName);
+        print(inVocie);
         emit(GetDatabaseState());
       });
     }
+  }
+
+  List<InVocieModel> invoiceClientList = [];
+
+  void invoiceClient({required int clientsId}) {
+    invoiceClientList = [];
+    dataBase
+        .rawQuery('SELECT * FROM  invoices WHERE clientsId=$clientsId ')
+        .then((value) {
+      for (var element in value) {
+        // print(invoiceClientList.any((ele) => ele == element));
+        // print(element['id']);
+        if (invoiceClientList.any((ele) => ele.id == element['id'])) {
+          print('object');
+        } else {
+          invoiceClientList.add(InVocieModel.fromJson(element));
+        }
+      }
+      // print(invoiceClientList);
+      emit(GetinvoiceClientListState());
+    });
+  }
+
+  List<InVocieModel> invocieItemList = [];
+  void invoiceItem({required int clientsId, required int id}) {
+    invocieItemList = [];
+    dataBase
+        .rawQuery(
+            'SELECT * FROM  invoices WHERE id=$id and clientsId=$clientsId ')
+        .then((value) {
+      for (var element in value) {
+        // print(invoiceClientList.any((ele) => ele == element));
+        // print(element['id']);
+
+        invocieItemList.add(InVocieModel.fromJson(element));
+      }
+      // print(invoiceClientList);
+      emit(GetinvoiceItemListState());
+    });
   }
 
   String randomNumber = '0000000';
@@ -354,6 +384,4 @@ class MicroCubit extends Cubit<MicroStates> {
     print(isForHim);
     emit(GetHim());
   }
-
-  
 }
