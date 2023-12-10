@@ -141,11 +141,13 @@ class MicroCubit extends Cubit<MicroStates> {
       dataBase.rawQuery('SELECT * FROM  items').then((value) {
         value.forEach((element) {
           items.add(element);
-
           i.add(ItemModel.fromJson(element));
-
-          // print('object: ${i.length}');
+          print('******************');
+          print(element['itemCount']);
+          print('object: ${i.length}');
+          print('******************');
         });
+
         // print(items);
         // print(items.length);
         emit(GetDatabaseState());
@@ -159,6 +161,8 @@ class MicroCubit extends Cubit<MicroStates> {
         value.forEach((element) {
           cl.add(element);
           c.add(ClientModel.fromJson(element));
+          print('cccc');
+          print(element['itemCount']);
         });
         print(c[0].clientId);
         emit(GetDatabaseState());
@@ -267,6 +271,7 @@ class MicroCubit extends Cubit<MicroStates> {
   // }
 
 //      ###################  Client   ######################/
+
   void insertClientDatabase({
     required String clientName,
     required String clientPhone,
@@ -291,8 +296,10 @@ class MicroCubit extends Cubit<MicroStates> {
   }
 
   void changeCount({required List<SaleModel> list, required int index}) {
-    if (list[index].itemCount! > list[index].itemCountb!) {
+    if (list[index].itemCount! > 0) {
       list[index].itemCountb = list[index].itemCountb! + 1;
+      list[index].itemCount = list[index].itemCount! - 1;
+      print(list[index].itemCount);
     }
 
     emit(ChangeCountState());
@@ -347,4 +354,6 @@ class MicroCubit extends Cubit<MicroStates> {
     print(isForHim);
     emit(GetHim());
   }
+
+  
 }
