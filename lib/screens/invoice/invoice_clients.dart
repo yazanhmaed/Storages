@@ -43,7 +43,7 @@ class InvocieClientsScreen extends StatelessWidget {
                   '${cubit.c[index].clientName}',
                   style: Styles.textStyle16,
                 ),
-                subtitle: Text('رقم العميل: ${cubit.c[index].clientId}'),
+                subtitle: Text('رقم العميل: ${cubit.c[index].clientPhone}'),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),
             ),

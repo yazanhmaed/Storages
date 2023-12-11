@@ -3,7 +3,6 @@
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
-import 'package:storage/model/client_model.dart';
 import 'package:storage/model/invocie_model.dart';
 import 'package:storage/model/sale_model.dart';
 import 'package:storage/resources/components.dart';
@@ -32,10 +31,9 @@ class _SalesState extends State<SalesScreen> {
   final String _selectableKey = "itemNumber";
 
   bool isLoading = true;
-  List<ClientModel> clientList = [];
+
   TextEditingController controller = TextEditingController();
-  TextEditingController nameClient = TextEditingController();
-  bool clientSearch = false;
+
   List<SaleModel> salesItems1 = [];
 
   _filterSearch(value) {
@@ -151,9 +149,7 @@ class _SalesState extends State<SalesScreen> {
                                     const Icon(Icons.qr_code_scanner_outlined)),
                             IconButton(
                                 onPressed: () {
-                                  setState(() {
-                                    clientSearch = !clientSearch;
-                                  });
+                                  cubit.changeSearch();
                                 },
                                 icon: const Icon(
                                     Icons.contact_emergency_rounded)),
@@ -181,10 +177,6 @@ class _SalesState extends State<SalesScreen> {
                             )),
                             IconButton(
                                 onPressed: () {
-                                  // salesItems1 = [];
-                                  // setState(() {});
-                                  // print(clientList.length);
-                                  // print(clientList[0].clientId);
                                   for (var i = 0; i < salesItems1.length; i++) {
                                     cubit.insertCustomer(
                                         inVocieModel: InVocieModel(
@@ -199,26 +191,26 @@ class _SalesState extends State<SalesScreen> {
                                             itemCount:
                                                 salesItems1[i].itemCountb,
                                             itemFill: salesItems1[i].itemFill,
-                                            customerId: 10));
+                                            customerId: cubit.cliId));
                                   }
+                                  cubit.clientSearch = false;
+                                  cubit.nameClientText.clear();
                                 },
                                 icon:
                                     const Icon(Icons.monetization_on_rounded)),
                           ],
                         ),
-                        if (clientSearch == true)
+                        if (cubit.clientSearch == true)
                           TextField(
-                            controller: nameClient,
+                            controller: cubit.nameClientText,
                             decoration: InputDecoration(
                               hintText: 'ادخل اسم العميل',
                               hintStyle: Styles.textStyle14,
                               prefixIcon: IconButton(
                                 icon: const Icon(Icons.cancel),
                                 onPressed: () {
-                                  nameClient.clear();
-                                  setState(() {
-                                    clientList.clear();
-                                  });
+                                  cubit.nameClientText.clear();
+                                  cubit.clientList.clear();
                                 },
                               ),
                               suffixIcon: IconButton(
@@ -227,13 +219,7 @@ class _SalesState extends State<SalesScreen> {
                               ),
                             ),
                             onChanged: (value) {
-                              setState(() {
-                                clientList = cubit.c
-                                    .where((e) => e.clientName!
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase()))
-                                    .toList();
-                              });
+                              cubit.searchClient(value);
                             },
                           ),
                       ],
@@ -350,8 +336,8 @@ class _SalesState extends State<SalesScreen> {
                                                   cubit.calculateTotalCount(
                                                       list: salesItems1);
 
-                                                  print(salesItems1[index]
-                                                      .itemCount);
+                                                  // print(salesItems1[index]
+                                                  //     .itemCount);
 
                                                   cubit.calculateTotalCost(
                                                       salesItems1: salesItems1);
@@ -404,25 +390,20 @@ class _SalesState extends State<SalesScreen> {
                                 ),
                               ),
                             ),
-                            if (clientList.isNotEmpty)
+                            if (cubit.clientList.isNotEmpty)
                               SizedBox(
                                   height:
                                       MediaQuery.sizeOf(context).height - 240,
                                   child: Card(
                                     child: ListView.builder(
-                                      itemCount: clientList.length,
+                                      itemCount: cubit.clientList.length,
                                       itemBuilder: (context, index) {
                                         return ListTile(
                                           onTap: () {
-                                            setState(() {
-                                              nameClient.text =
-                                                  clientList[index].clientName!;
-                                              clientList = [];
-                                            });
-                                            print(nameClient.text);
+                                            cubit.nameClient(index);
                                           },
                                           title: Text(
-                                              '${clientList[index].clientName}'),
+                                              '${cubit.clientList[index].clientName}'),
                                         );
                                       },
                                     ),
@@ -454,9 +435,8 @@ class _SalesState extends State<SalesScreen> {
                                                       source[index]));
                                             }
 
-                                            setState(() {
-                                              controller.clear();
-                                            });
+                                            controller.clear();
+
                                             cubit.calculateTotalCount(
                                                 list: salesItems1);
                                             print(salesItems1[index].itemCostb);

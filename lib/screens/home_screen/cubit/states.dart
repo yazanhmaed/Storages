@@ -35,3 +35,6 @@ class RemoveState extends MicroStates {}
 class ItemDiscountState extends MicroStates {}
 
 class GetHim extends MicroStates {}
+class GetSearch extends MicroStates {}
+class GetNameClient extends MicroStates {}
+class GetChangeSearch extends MicroStates {}

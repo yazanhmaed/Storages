@@ -75,7 +75,7 @@ class _InvocieIdScreenState extends State<InvocieIdScreen> {
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        'تاريخ الفاتورة: 11/12/2023',
+                        'تاريخ الفاتورة: ${cubit.invoiceClientList[index].date}',
                         style: TextStyle(fontSize: 14),
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),

@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:cubit_form/cubit_form.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:storage/model/client_model.dart';
 import 'package:storage/model/invocie_model.dart';
@@ -57,6 +59,7 @@ class MicroCubit extends Cubit<MicroStates> {
           CREATE TABLE invoices(
             id INTEGER ,
             itemNumber INTEGER  ,itemName TEXT,itemPrice INTEGER,itemCost INTEGER , itemFill INTEGER,itemCount INTEGER,
+           date TEXT,
             clientsId INTEGER,
             FOREIGN KEY (clientsId) REFERENCES clients(clientId)
           )
@@ -81,7 +84,7 @@ class MicroCubit extends Cubit<MicroStates> {
   void insertCustomer({required InVocieModel inVocieModel}) async {
     dataBase.transaction((txn) => txn
             .rawInsert(
-                'INSERT INTO invoices(id,itemNumber,itemName,itemPrice,itemCost,itemFill,itemCount,clientsId) VALUES("${inVocieModel.id}","${inVocieModel.itemNumber}","${inVocieModel.itemName}","${inVocieModel.itemPrice}","${inVocieModel.itemCost}","${inVocieModel.itemFill}","${inVocieModel.itemCount}","${inVocieModel.customerId}")')
+                'INSERT INTO invoices(id,itemNumber,itemName,itemPrice,itemCost,itemFill,itemCount,date,clientsId) VALUES("${inVocieModel.id}","${inVocieModel.itemNumber}","${inVocieModel.itemName}","${inVocieModel.itemPrice}","${inVocieModel.itemCost}","${inVocieModel.itemFill}","${inVocieModel.itemCount}","${DateFormat.yMd().format(DateTime.now())}","${inVocieModel.customerId}")')
             .then((value) {
           print('$value inserted successfuly');
           // getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
@@ -383,5 +386,37 @@ class MicroCubit extends Cubit<MicroStates> {
     isForHim = isFor;
     print(isForHim);
     emit(GetHim());
+  }
+
+  int? cliId;
+  void clientId({required int id}) {
+    cliId = id;
+    print('id: $cliId');
+    emit(GetSearch());
+  }
+
+  List<ClientModel> clientList = [];
+  void searchClient(String text) {
+    clientList = c
+        .where((e) => e.clientName!.toLowerCase().contains(text.toLowerCase()))
+        .toList();
+    print('clientList.first.clientId!');
+    print(clientList.first.clientId!);
+    print('clientList.first.clientId!');
+    emit(GetSearch());
+  }
+  TextEditingController nameClientText = TextEditingController();
+
+  void nameClient(int index) {
+    nameClientText.text = clientList[index].clientName!;
+   clientId(id: clientList[index].clientId!);
+    clientList = [];
+    emit(GetNameClient());
+  }
+
+  bool clientSearch = false;
+  void changeSearch() {
+    clientSearch = !clientSearch;
+    emit(GetChangeSearch());
   }
 }
