@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_element, depend_on_referenced_packages, unnecessary_import
+// ignore_for_file: avoid_print, unused_element, depend_on_referenced_packages, unnecessary_import, unrelated_type_equality_checks
 
 import 'dart:math';
 
@@ -196,11 +196,11 @@ class MicroCubit extends Cubit<MicroStates> {
   }
 
   List<InVocieModel> invocieItemList = [];
-  void invoiceItem({required int clientsId, required int id}) {
+  void invoiceItem({required int clientsId, required int invoiceId}) {
     invocieItemList = [];
     dataBase
         .rawQuery(
-            'SELECT * FROM  invoices WHERE id=$id and clientsId=$clientsId ')
+            'SELECT * FROM  invoices WHERE id=$invoiceId and clientsId=$clientsId ')
         .then((value) {
       for (var element in value) {
         // print(invoiceClientList.any((ele) => ele == element));

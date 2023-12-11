@@ -2,8 +2,7 @@
 
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
-import 'package:storage/resources/styles.dart';
-
+import 'package:storage/resources/app_images.dart';
 import 'package:storage/resources/widgets/my_stack.dart';
 import 'package:storage/screens/client/client_screen.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
@@ -42,7 +41,7 @@ class LayoutScreen extends StatelessWidget {
                             builder: (context) => InventoryScreen(),
                           ));
                     },
-                    image: 'assets/images/items.png',
+                    image: AppImages.items,
                   ),
                   MyStack(
                     text: 'المبيعات',
@@ -53,7 +52,7 @@ class LayoutScreen extends StatelessWidget {
                             builder: (context) => SalesScreen(),
                           ));
                     },
-                    image: 'assets/images/sales.png',
+                    image: AppImages.sales,
                   ),
                   MyStack(
                     text: 'العملاء',
@@ -64,7 +63,7 @@ class LayoutScreen extends StatelessWidget {
                             builder: (context) => ClientScreen(),
                           ));
                     },
-                    image: 'assets/images/client.png',
+                    image: AppImages.client,
                   ),
                   MyStack(
                     text: 'الفواتير',
@@ -75,7 +74,7 @@ class LayoutScreen extends StatelessWidget {
                             builder: (context) => InvocieClientsScreen(),
                           ));
                     },
-                    image: 'assets/images/client.png',
+                    image: AppImages.invocie,
                   ),
                 ],
               ),

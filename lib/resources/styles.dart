@@ -11,10 +11,17 @@ abstract class Styles {
     fontWeight: FontWeight.normal,
     fontFamily: 'Amiri',
   );
-  static const textStyle25 = TextStyle(
-    fontSize: 25,
-    fontWeight: FontWeight.w600,
+  static const textStyle16 = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
     fontFamily: 'Amiri',
+  );
+  static const textStyle25 = TextStyle(
+    color: Colors.black,
+    fontSize: 25,
+    fontFamily: 'Amiri',
+    fontWeight: FontWeight.w500,
+    height: 0,
   );
 
   static const textStyle18 = TextStyle(
@@ -23,9 +30,11 @@ abstract class Styles {
     fontFamily: 'Amiri',
   );
   static const textStyle20 = TextStyle(
+    color: Colors.black,
     fontSize: 20,
     fontFamily: 'Amiri',
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w500,
+    height: 0,
   );
   static const textStyle40 = TextStyle(
     fontSize: 40,

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
@@ -108,7 +108,20 @@ class _SalesState extends State<SalesScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MicroCubit, MicroStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is InsertDatabaseState) {
+          salesItems1 = [];
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              dismissDirection: DismissDirection.down,
+              content: Icon(Icons.attach_money, color: Colors.white),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      },
       builder: (context, state) {
         var cubit = MicroCubit.get(context);
 
@@ -175,15 +188,18 @@ class _SalesState extends State<SalesScreen> {
                                   for (var i = 0; i < salesItems1.length; i++) {
                                     cubit.insertCustomer(
                                         inVocieModel: InVocieModel(
-                                      id: 3,
-                                      itemNumber: salesItems1[i].itemNumber,
-                                      itemName: salesItems1[i].itemName,
-                                      itemPrice: salesItems1[i].itemPrice,
-                                      itemCost: salesItems1[i].itemCost,
-                                      itemCount: salesItems1[i].itemCountb,
-                                      itemFill: salesItems1[i].itemFill,
-                                      customerId: 2,
-                                    ));
+                                            id: (cubit
+                                                    .invoiceClientList.length) +
+                                                1,
+                                            itemNumber:
+                                                salesItems1[i].itemNumber,
+                                            itemName: salesItems1[i].itemName,
+                                            itemPrice: salesItems1[i].itemPrice,
+                                            itemCost: salesItems1[i].itemCost,
+                                            itemCount:
+                                                salesItems1[i].itemCountb,
+                                            itemFill: salesItems1[i].itemFill,
+                                            customerId: 10));
                                   }
                                 },
                                 icon:
@@ -194,30 +210,30 @@ class _SalesState extends State<SalesScreen> {
                           TextField(
                             controller: nameClient,
                             decoration: InputDecoration(
-                                hintText: 'ادخل اسم العميل',
-                                hintStyle: Styles.textStyle14,
-                                prefixIcon: IconButton(
-                                    icon: const Icon(Icons.cancel),
-                                    onPressed: () {
-                                      nameClient.clear();
-                                    }),
-                                suffixIcon: IconButton(
-                                    icon: const Icon(Icons.search),
-                                    onPressed: () {})),
+                              hintText: 'ادخل اسم العميل',
+                              hintStyle: Styles.textStyle14,
+                              prefixIcon: IconButton(
+                                icon: const Icon(Icons.cancel),
+                                onPressed: () {
+                                  nameClient.clear();
+                                  setState(() {
+                                    clientList.clear();
+                                  });
+                                },
+                              ),
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.search),
+                                onPressed: () {},
+                              ),
+                            ),
                             onChanged: (value) {
-                              final suggestions = cubit.c.where((e) {
-                                final clientTitle = e.clientName!.toLowerCase();
-                                final input = value.toLowerCase();
-                                return clientTitle.contains(input);
-                              }).toList();
                               setState(() {
-                                clientList.add(cubit.c[1]);
+                                clientList = cubit.c
+                                    .where((e) => e.clientName!
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase()))
+                                    .toList();
                               });
-                              print(suggestions);
-                            },
-                            onSubmitted: (value) {
-                              clientList.add(cubit.c[1]);
-                              print(clientList);
                             },
                           ),
                       ],
