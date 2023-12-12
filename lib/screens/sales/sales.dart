@@ -5,12 +5,15 @@ import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/model/invocie_model.dart';
 import 'package:storage/model/sale_model.dart';
-import 'package:storage/resources/components.dart';
+import 'package:storage/resources/app_images.dart';
+
 import 'package:storage/resources/styles.dart';
+import 'package:storage/resources/widgets/appbar.dart';
+import 'package:storage/resources/widgets/bottom_nav.dart';
 import 'package:storage/resources/widgets/bottom_sheet_sale.dart';
+import 'package:storage/resources/widgets/on_will_pop.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/home_screen/layout_screen.dart';
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});
@@ -124,16 +127,9 @@ class _SalesState extends State<SalesScreen> {
         var cubit = MicroCubit.get(context);
 
         return WillPopScope(
-          onWillPop: () => _onWillPop(context),
+          onWillPop: () => onWillPop(context),
           child: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                  onPressed: () {
-                    navigateAndFinish(context, LayoutScreen());
-                  },
-                  icon: Icon(Icons.arrow_back_ios)),
-              title: Text('المبيعات', style: Styles.textStyle25),
-            ),
+            appBar: buildAppBar(title: 'المبيعات', image: AppImages.sales),
             body: Padding(
               padding: const EdgeInsets.all(10.0),
               child: CustomScrollView(
@@ -145,14 +141,18 @@ class _SalesState extends State<SalesScreen> {
                           children: [
                             IconButton(
                                 onPressed: () {},
-                                icon:
-                                    const Icon(Icons.qr_code_scanner_outlined)),
+                                icon: const Icon(
+                                  Icons.qr_code_scanner_outlined,
+                                  color: Colors.black,
+                                )),
                             IconButton(
                                 onPressed: () {
                                   cubit.changeSearch();
                                 },
-                                icon: const Icon(
-                                    Icons.contact_emergency_rounded)),
+                                icon: Icon(
+                                  Icons.contact_emergency_rounded,
+                                  color: Colors.black.withOpacity(0.6),
+                                )),
                             Expanded(
                                 child: TextField(
                               controller: controller,
@@ -160,12 +160,14 @@ class _SalesState extends State<SalesScreen> {
                                 hintText: 'ادخل اسم المنتج',
                                 hintStyle: Styles.textStyle14,
                                 prefixIcon: IconButton(
-                                    icon: const Icon(Icons.cancel),
+                                    icon:
+                                        Icon(Icons.cancel, color: Colors.black),
                                     onPressed: () {
                                       _initializeData();
                                     }),
                                 suffixIcon: IconButton(
                                     icon: const Icon(Icons.search),
+                                    color: Colors.black,
                                     onPressed: () {}),
                               ),
                               onChanged: (value) {
@@ -196,8 +198,10 @@ class _SalesState extends State<SalesScreen> {
                                   cubit.clientSearch = false;
                                   cubit.nameClientText.clear();
                                 },
-                                icon:
-                                    const Icon(Icons.monetization_on_rounded)),
+                                icon: const Icon(
+                                  Icons.monetization_on_rounded,
+                                  color: Colors.amber,
+                                )),
                           ],
                         ),
                         if (cubit.clientSearch == true)
@@ -207,14 +211,20 @@ class _SalesState extends State<SalesScreen> {
                               hintText: 'ادخل اسم العميل',
                               hintStyle: Styles.textStyle14,
                               prefixIcon: IconButton(
-                                icon: const Icon(Icons.cancel),
+                                icon: const Icon(
+                                  Icons.cancel,
+                                  color: Colors.black,
+                                ),
                                 onPressed: () {
                                   cubit.nameClientText.clear();
                                   cubit.clientList.clear();
                                 },
                               ),
                               suffixIcon: IconButton(
-                                icon: const Icon(Icons.search),
+                                icon: const Icon(
+                                  Icons.search,
+                                  color: Colors.black,
+                                ),
                                 onPressed: () {},
                               ),
                             ),
@@ -248,9 +258,6 @@ class _SalesState extends State<SalesScreen> {
                                         .copyWith(color: Colors.white)),
                               ),
                             ),
-                            // Text('التعبئة',
-                            //     style: Styles.textStyle14
-                            //         .copyWith(color: Colors.white)),
                             Expanded(
                               flex: 2,
                               child: Center(
@@ -466,80 +473,11 @@ class _SalesState extends State<SalesScreen> {
                 ],
               ),
             ),
-            bottomNavigationBar: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: [
-                    Text('الاجمالي', style: Styles.textStyle18),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: salesItems1.isEmpty
-                          ? Text('0.0')
-                          : Text('${cubit.totalCost}'),
-                    ),
-                    Text('الكمية', style: Styles.textStyle18),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: salesItems1.isEmpty
-                          ? Text('0')
-                          : Text('${cubit.totalCount}'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            bottomNavigationBar:
+                BuildBottomNav(salesItems1: salesItems1, cubit: cubit),
           ),
         );
       },
     );
   }
-}
-
-Future<bool> _onWillPop(BuildContext context) async {
-  return (await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('هل تريد العودة للقائمه الرئيسيه؟'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text('لا'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text('نعم'),
-            ),
-          ],
-        ),
-      )) ??
-      false;
-}
-
-Widget buildInfoColumn(String label, String value) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      SizedBox(height: 5),
-      Text(
-        value,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-        ),
-      ),
-    ],
-  );
 }

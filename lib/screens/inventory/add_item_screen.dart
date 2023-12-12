@@ -2,14 +2,11 @@
 
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
-import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/custom_text_field.dart';
 import 'package:storage/resources/widgets/doastWidget.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/home_screen/layout_screen.dart';
-import 'package:storage/screens/inventory/inventory_screen.dart';
 
 class AddProductScreen extends StatelessWidget {
   AddProductScreen({super.key});
@@ -41,11 +38,6 @@ class AddProductScreen extends StatelessWidget {
                 "اضافة منتج",
                 style: Styles.textStyle25,
               ),
-              leading: IconButton(
-                  onPressed: () {
-                    navigateAndFinish(context, InventoryScreen());
-                  },
-                  icon: Icon(Icons.arrow_back_ios)),
             ),
             body: Padding(
               padding: const EdgeInsets.all(20.0),

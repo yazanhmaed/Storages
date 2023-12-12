@@ -2,15 +2,14 @@
 
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
-import 'package:storage/resources/components.dart';
-import 'package:storage/resources/styles.dart';
+import 'package:storage/resources/app_images.dart';
+import 'package:storage/resources/widgets/appbar.dart';
 import 'package:storage/resources/widgets/my_cared.dart';
 import 'package:storage/screens/client/add_client_screen.dart';
 import 'package:storage/screens/client/balance.dart';
 import 'package:storage/screens/client/client_show.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/home_screen/layout_screen.dart';
 
 class ClientScreen extends StatelessWidget {
   const ClientScreen({super.key});
@@ -23,17 +22,7 @@ class ClientScreen extends StatelessWidget {
         var cubit = MicroCubit.get(context);
 
         return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  navigateAndFinish(context, LayoutScreen());
-                },
-                icon: Icon(Icons.arrow_back_ios)),
-            title: Text(
-              "العملاء",
-              style: Styles.textStyle25,
-            ),
-          ),
+          appBar: buildAppBar(title: "العملاء", image: AppImages.client),
           body: SafeArea(
             child: CustomScrollView(
               slivers: [

@@ -83,7 +83,7 @@ class AddClientScreen extends StatelessWidget {
                                         if (value!.isEmpty) {
                                           return 'إدخل اسم العميل ';
                                         }
-                                        // ignore: iterable_contains_unrelated_type
+
                                         for (var map in cubit.i) {
                                           if (map.itemName == value) {
                                             return 'الاسم مستخدم مسبقاً ';
@@ -105,17 +105,12 @@ class AddClientScreen extends StatelessWidget {
                                     CustomTextField(
                                       label: '',
                                       controller: clientPhone,
-                                      keyboardType: TextInputType.number,
+                                      keyboardType: TextInputType.phone,
                                       validate: (value) {
                                         if (value!.isEmpty) {
-                                          return 'إدخل اسم العميل ';
+                                          return 'أدخل رقم الهاتف';
                                         }
-                                        // ignore: iterable_contains_unrelated_type
-                                        for (var map in cubit.i) {
-                                          if (map.itemName == value) {
-                                            return 'الاسم مستخدم مسبقاً ';
-                                          }
-                                        }
+
                                         return null;
                                       },
                                     ),

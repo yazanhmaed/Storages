@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:storage/resources/app_images.dart';
 import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
+import 'package:storage/resources/widgets/appbar.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 import 'package:storage/screens/invoice/invoice_id.dart';
@@ -19,13 +20,8 @@ class InvocieClientsScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = MicroCubit.get(context);
         return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'فواتير العملاء',
-              style: Styles.textStyle25,
-            ),
-            actions: [Image.asset(AppImages.invocie)],
-          ),
+          appBar:
+              buildAppBar(title: 'فواتير العملاء', image: AppImages.invocie),
           body: ListView.builder(
             itemCount: cubit.c.length,
             itemBuilder: (context, index) => Card(
