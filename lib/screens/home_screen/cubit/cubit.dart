@@ -54,8 +54,7 @@ class MicroCubit extends Cubit<MicroStates> {
           print('Error creating Clients table: ${error.toString()}');
         });
 
-        await database.execute(
-            '''
+        await database.execute('''
           CREATE TABLE invoices(
             id INTEGER ,
             itemNumber INTEGER  ,itemName TEXT,itemPrice INTEGER,itemCost INTEGER , itemFill INTEGER,itemCount INTEGER,
@@ -259,6 +258,22 @@ class MicroCubit extends Cubit<MicroStates> {
     });
   }
 
+  void selesCount({
+    required int count,
+    required int number,
+  }) async {
+    await dataBase
+        .update('items', {'itemCount': count},
+            where: 'itemNumber = ?', whereArgs: ['$number'])
+        .then((value) {
+      getDataFromDatabase(dataBase, dataClients: false, dataItems: true);
+      emit(UpdataDatabaseState());
+    }).catchError((onError) {
+      print(onError);
+      emit(UpdataDatabaseErrorState());
+    });
+  }
+
   Future update({required ItemModel item}) async {
     await dataBase.update('items', item.toMap(),
         where: 'itemNumber = ?', whereArgs: [item.itemNumber]).then((value) {
@@ -333,10 +348,18 @@ class MicroCubit extends Cubit<MicroStates> {
       list[index].itemCountb = list[index].itemCountb! + 1;
       list[index].itemCount = list[index].itemCount! - 1;
       print(list[index].itemCount);
+      emit(ChangeCountState());
     }
-
-    emit(ChangeCountState());
   }
+
+//   void changeCount({required List<SaleModel> list, required int index}) {
+//   if (list[index].itemCount! > 0) {
+//     list[index].itemCountb = list[index].itemCountb! + 1;
+//     list[index].itemCount = list[index].itemCount! - 1;
+//     print(list[index].itemCount);
+//     emit(ChangeCountState());
+//   }
+// }
 
   void removeItem({required List<SaleModel> list, required int index}) {
     list.removeWhere((element) => element.itemNumber == index);
@@ -347,15 +370,11 @@ class MicroCubit extends Cubit<MicroStates> {
   int changeCountSheet({required int index}) {
     emit(ChangeCountState());
     return index;
-
-    //  totalCost;
   }
 
   int itemDiscountSheet({required int index}) {
     emit(ItemDiscountState());
     return index;
-
-    //  totalCost;
   }
 
   int totalCount = 0;
@@ -405,11 +424,12 @@ class MicroCubit extends Cubit<MicroStates> {
     print('clientList.first.clientId!');
     emit(GetSearch());
   }
+
   TextEditingController nameClientText = TextEditingController();
 
   void nameClient(int index) {
     nameClientText.text = clientList[index].clientName!;
-   clientId(id: clientList[index].clientId!);
+    clientId(id: clientList[index].clientId!);
     clientList = [];
     emit(GetNameClient());
   }

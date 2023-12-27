@@ -3,6 +3,7 @@
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/resources/styles.dart';
+import 'package:storage/resources/widgets/hedar_card.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
 
@@ -42,47 +43,7 @@ class _InvocieScreenState extends State<InvocieScreen> {
           body: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
-                child: Card(
-                  color: Colors.grey[500],
-                  child: ListTile(
-                    leading: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.2,
-                      child: Text(
-                        'المنتج',
-                        style: Styles.textStyle14.copyWith(color: Colors.white),
-                      ),
-                    ),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Center(
-                            child: Text('السعر',
-                                style: Styles.textStyle14
-                                    .copyWith(color: Colors.white)),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Center(
-                            child: Text('الكمية',
-                                style: Styles.textStyle14
-                                    .copyWith(color: Colors.white)),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Center(
-                            child: Text("الاجمالي",
-                                style: Styles.textStyle14
-                                    .copyWith(color: Colors.white)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                child: HedarCard(),
               ),
               SliverToBoxAdapter(
                 child: Column(
@@ -90,7 +51,7 @@ class _InvocieScreenState extends State<InvocieScreen> {
                     Stack(
                       children: [
                         SizedBox(
-                          height: MediaQuery.sizeOf(context).height - 240,
+                          height: MediaQuery.sizeOf(context).height,
                           child: ListView.separated(
                             itemBuilder: (context, index) {
                               return Card(
@@ -121,7 +82,7 @@ class _InvocieScreenState extends State<InvocieScreen> {
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 2,
+                                        flex: 1,
                                         child: Center(
                                           child: Text(
                                             cubit.invocieItemList[index]
@@ -131,7 +92,7 @@ class _InvocieScreenState extends State<InvocieScreen> {
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 1,
+                                        flex: 2,
                                         child: Center(
                                           child: Text(
                                             '${cubit.invocieItemList[index].itemFill! * cubit.invocieItemList[index].itemPrice! * cubit.invocieItemList[index].itemCount!}',

@@ -11,6 +11,7 @@ import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/appbar.dart';
 import 'package:storage/resources/widgets/bottom_nav.dart';
 import 'package:storage/resources/widgets/bottom_sheet_sale.dart';
+import 'package:storage/resources/widgets/hedar_card.dart';
 import 'package:storage/resources/widgets/on_will_pop.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
@@ -111,8 +112,19 @@ class _SalesState extends State<SalesScreen> {
     return BlocConsumer<MicroCubit, MicroStates>(
       listener: (context, state) {
         if (state is InsertDatabaseState) {
-          salesItems1 = [];
+          for (var i = 0; i < salesItems1.length; i++) {
+            print('');
 
+            MicroCubit.get(context).selesCount(
+              count: salesItems1[i].itemCount! - salesItems1[i].itemCountb!,
+              number: salesItems1[i].itemNumber!,
+            );
+            print(
+                '000000000${salesItems1[i].itemCount! - salesItems1[i].itemCountb!}');
+            print(salesItems1[i].itemCount!);
+          }
+
+          salesItems1 = [];
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               dismissDirection: DismissDirection.down,
@@ -235,50 +247,7 @@ class _SalesState extends State<SalesScreen> {
                       ],
                     ),
                   ),
-                  SliverToBoxAdapter(
-                    child: Card(
-                      color: Colors.grey[500],
-                      child: ListTile(
-                        leading: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: Text(
-                            'المنتج',
-                            style: Styles.textStyle14
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Center(
-                                child: Text('السعر',
-                                    style: Styles.textStyle14
-                                        .copyWith(color: Colors.white)),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Center(
-                                child: Text('الكميه',
-                                    style: Styles.textStyle14
-                                        .copyWith(color: Colors.white)),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Center(
-                                child: Text("الاجمالي",
-                                    style: Styles.textStyle14
-                                        .copyWith(color: Colors.white)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  SliverToBoxAdapter(child: HedarCard()),
                   SliverToBoxAdapter(
                     child: Column(
                       children: [

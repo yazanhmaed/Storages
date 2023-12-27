@@ -5,12 +5,10 @@ import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
-import 'package:storage/resources/components.dart';
 import 'package:storage/resources/styles.dart';
 import 'package:storage/resources/widgets/bottom_sheet.dart';
 import 'package:storage/screens/home_screen/cubit/cubit.dart';
 import 'package:storage/screens/home_screen/cubit/states.dart';
-import 'package:storage/screens/inventory/inventory_screen.dart';
 import 'package:storage/screens/pdf/availble_products.dart';
 import 'package:storage/screens/pdf/barcode.dart';
 import 'package:storage/screens/pdf/file_handle_api.dart';
@@ -200,11 +198,6 @@ class _DataPageState extends State<DataPage> {
                 icon: const Icon(Icons.refresh_sharp),
               ),
             ],
-            leading: IconButton(
-                onPressed: () {
-                  navigateAndFinish(context, InventoryScreen());
-                },
-                icon: Icon(Icons.arrow_back_ios)),
           ),
           // drawer: Drawer(
           //   child: ListView(
